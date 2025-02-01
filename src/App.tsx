@@ -1,13 +1,29 @@
 import React from 'react';
 import './App.css';
 import Navbar from './navbar';
-import Hero from './HeroSection';
+
+import Footer from './pages/footer';
+import Copyright from './pages/Copyright';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Home from './pages/homePage';
+import Spinner from './Spinner';
+import Shop from './pages/shop';
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <Navbar/>
-      <Hero/>
+      <Router>
+        <Spinner/>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/shop" element={<Shop/>}></Route>
+        </Routes>
+
+        <Footer />
+        <Copyright />
+      </Router>
+
     </div>
   );
 };
