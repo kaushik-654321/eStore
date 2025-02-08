@@ -1,0 +1,31 @@
+{
+    "fruits": [
+      {
+        "id": 1,
+        "name": "Grapes",
+        "category": "Fruits",
+        "image": "img/fruite-item-5.jpg",
+        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+        "price": "$4.99 / kg"
+      },
+      {
+        "id": 2,
+        "name": "Raspberries",
+        "category": "Fruits",
+        "image": "img/fruite-item-2.jpg",
+        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+        "price": "$4.99 / kg"
+      },
+      {
+        "id": 3,
+        "name": "Apricots",
+        "category": "Fruits",
+        "image": "img/fruite-item-4.jpg",
+        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt",
+        "price": "$4.99 / kg"
+      }
+      
+
+    ]
+  }
+  
