@@ -2,65 +2,15 @@ import React, { useState, useEffect } from 'react';
 import SearchModal from './searchModal';
 
 const Shop: React.FC = () => {
+    const [fruits, setFruits] = useState([]);
 
     useEffect(() => {
         fetch('https://fantastic-disco-x457747qvww2p5vp-8000.app.github.dev/fruits')
         .then((response) => response.json())
-        .then((data) => console.log(data));
+        .then((data) => setFruits(data))
+        .catch((error)=>console.log('Error', error))
     }, [])
 
-
-    const fruits = [
-        {
-            id: 1,
-            name: 'Grapes',
-            category: 'Fruits',
-            image: 'img/fruite-item-5.jpg',
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt',
-            price: '$4.99 / kg',
-        },
-        {
-            id: 2,
-            name: 'Raspberries',
-            category: 'Fruits',
-            image: 'img/fruite-item-2.jpg',
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt',
-            price: '$4.99 / kg',
-        },
-        {
-            id: 3,
-            name: 'Apricots',
-            category: 'Fruits',
-            image: 'img/fruite-item-4.jpg',
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt',
-            price: '$4.99 / kg',
-        },
-        {
-            id: 4,
-            name: 'Oranges',
-            category: 'Fruits',
-            image: 'img/fruite-item-2.jpg',
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt',
-            price: '$4.99 / kg',
-        },
-        {
-            id: 6,
-            name: 'Apricots',
-            category: 'Fruits',
-            image: 'img/fruite-item-4.jpg',
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt',
-            price: '$4.99 / kg',
-        },
-        {
-            id: 7,
-            name: 'Apricots',
-            category: 'Fruits',
-            image: 'img/fruite-item-4.jpg',
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt',
-            price: '$4.99 / kg',
-        },
-        // Add more fruits here
-    ];
     return (
         <>
             <SearchModal />
