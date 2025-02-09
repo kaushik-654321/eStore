@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import SearchModal from './searchModal';
+import { fetchData } from '../services/api';
 
 const Shop: React.FC = () => {
     const [fruits, setFruits] = useState([]);
-
     useEffect(() => {
-        fetch('https://fantastic-disco-x457747qvww2p5vp-8000.app.github.dev/fruits')
-        .then((response) => response.json())
-        .then((data) => setFruits(data))
-        .catch((error)=>console.log('Error', error))
+        fetchData()
+            .then((result) => {
+                if (result.error) {
+                    console.error(result.error);
+                } else {
+                    setFruits(result);
+                }
+            })
+            .catch((err) => console.error("Unexpected error occurred"));
     }, [])
 
     return (
