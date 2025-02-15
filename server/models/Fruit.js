@@ -5,7 +5,7 @@ const fruitSchema = new mongoose.Schema({
     category: { type: String, default: "Fruits" },
     image: { type: String, required: true },
     description: { type: String, required: true },
-    price: { type: Number, required: true }, 
+    price: { type: String, required: true }, 
 });
 
 const Fruit = mongoose.model("Fruit", fruitSchema);

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import apiRoutes from "./routes/apiRoutes.js"; 
+import fruitRoutes from "./routes/fruitRoutes.js";
 
 dotenv.config();
 
@@ -30,7 +31,7 @@ mongoose
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
 // Sample route
-app.use("/api", apiRoutes)
+app.use("/fruits", fruitRoutes)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -1,4 +1,4 @@
-const API_URL = "https://fantastic-disco-x457747qvww2p5vp-5000.app.github.dev/api/fruits";
+const API_URL = "https://fantastic-disco-x457747qvww2p5vp-5000.app.github.dev/fruits/";
 
 export const fetchData = async () => {
     try {
