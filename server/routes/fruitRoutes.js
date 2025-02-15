@@ -6,8 +6,16 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const fruits = await Fruit.find();
-    res.json(fruits);
+    let { page = 1, limit = 6, search = "" } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+
+    //search filter
+    const searchQuery = search ? { name: { $regex: `^${search}`, $options: "i" } } : {};
+    const fruits = await Fruit.find(searchQuery).skip((page - 1) * limit).limit(limit);
+    const totalFruits  = await Fruit.countDocuments(searchQuery);
+
+    res.json({fruits, totalFruits});
   }
   catch (error) {
     res.status(500).json({ error: "Error fetching fruits" });

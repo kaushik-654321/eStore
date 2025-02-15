@@ -1,20 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import SearchModal from './searchModal';
 import { fetchData } from '../services/api';
+import Pagination from './Pagination';
+import FruitsComponent from './fruits';
+
+type Fruits = {
+    "_id": string,
+    "name": string,
+    "category": string,
+    "image": string,
+    "description": string,
+    "price": string,
+}
 
 const Shop: React.FC = () => {
-    const [fruits, setFruits] = useState([]);
+    const [fruits, setFruits] = useState<Fruits[]>([]);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [search, setSearch] = useState<string>("");
+    const [query, setQuery] = useState<string>("");
+    const limit = 6;
+
+
+
+
     useEffect(() => {
-        fetchData()
+        fetchData(limit, currentPage, search)
             .then((result) => {
                 if (result.error) {
                     console.error(result.error);
                 } else {
-                    setFruits(result);
+
+                    setFruits(result.fruits);
+                    setTotalPages(result.totalFruits);
                 }
             })
             .catch((err) => console.error("Unexpected error occurred"));
-    }, [])
+    }, [currentPage, query])
+
+    useEffect(() => {
+        const delayDebouncefn = setTimeout(() => {
+            setCurrentPage(1);
+            setQuery(search);
+        }, 500);
+
+        return () => { clearTimeout(delayDebouncefn) }
+    }, [search])
 
     return (
         <>
@@ -36,7 +67,7 @@ const Shop: React.FC = () => {
                         <div className="row g-4">
                             <div className="col-xl-3">
                                 <div className="input-group w-100 mx-auto d-flex">
-                                    <input type="search" className="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1" />
+                                    <input type="search" className="form-control p-3" onChange={(e) => setSearch(e.target.value)} placeholder="keywords" aria-describedby="search-icon-1" />
                                     <span id="search-icon-1" className="input-group-text p-3"><i className="fa fa-search"></i></span>
                                 </div>
                             </div>
@@ -200,46 +231,14 @@ const Shop: React.FC = () => {
                             </div>
                             <div className="col-lg-9">
                                 <div className="row g-4 justify-content-center">
-                                    {fruits.map(fruit => (
-                                        <div key={fruit.id} className="col-md-6 col-lg-6 col-xl-4">
-                                            <div className="rounded position-relative fruite-item">
-                                                <div className="fruite-img">
-                                                    <img
-                                                        src={fruit.image}
-                                                        className="img-fluid w-100 rounded-top"
-                                                        alt={fruit.name}
-                                                    />
-                                                </div>
-                                                <div
-                                                    className="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                                                    style={{ top: '10px', left: '10px' }}
-                                                >
-                                                    {fruit.category}
-                                                </div>
-                                                <div className="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>{fruit.name}</h4>
-                                                    <p>{fruit.description}</p>
-                                                    <div className="d-flex justify-content-between flex-lg-wrap">
-                                                        <p className="text-dark fs-5 fw-bold mb-0">{fruit.price}</p>
-                                                        <a href="#" className="btn border border-secondary rounded-pill px-3 text-primary">
-                                                            <i className="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
+                                  {fruits.length >0 ? <FruitsComponent fruitsData={fruits} /> :''} 
                                     <div className="col-12">
-                                        <div className="pagination d-flex justify-content-center mt-5">
-                                            <a href="#" className="rounded">&laquo;</a>
-                                            <a href="#" className="active rounded">1</a>
-                                            <a href="#" className="rounded">2</a>
-                                            <a href="#" className="rounded">3</a>
-                                            <a href="#" className="rounded">4</a>
-                                            <a href="#" className="rounded">5</a>
-                                            <a href="#" className="rounded">6</a>
-                                            <a href="#" className="rounded">&raquo;</a>
-                                        </div>
+                                        <Pagination
+                                            totalItems={totalPages}
+                                            itemsPerPage={limit}
+                                            currentPage={currentPage}
+                                            onPageChange={setCurrentPage}
+                                        />
                                     </div>
                                 </div>
                             </div>
