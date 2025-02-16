@@ -2,10 +2,10 @@ import React from 'react';
 import './App.css';
 import Navbar from './navbar';
 
-import Footer from './pages/footer';
+import Footer from './pages/Footer';
 import Copyright from './pages/Copyright';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Home from './pages/homePage';
+import Home from './pages/HomePage';
 import Spinner from './Spinner';
 import Shop from './pages/shop';
 

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import SearchModal from './searchModal';
+import SearchModal from './SearchModal';
 import { fetchData } from '../services/api';
 import Pagination from './Pagination';
-import FruitsComponent from './fruits';
+import FruitsComponent from './Fruits';
+import Categories from './Categories';
+import { API_ENDPOINTS } from '../api/apiEndpoints';
 
 type Fruits = {
     "_id": string,
@@ -13,19 +15,37 @@ type Fruits = {
     "price": string,
 }
 
+type Categories = {
+    "_id": string,
+    "name": string,
+    "fruitCount": number
+}
 const Shop: React.FC = () => {
     const [fruits, setFruits] = useState<Fruits[]>([]);
+    const [categories, setCategories] = useState<Categories[]>([]);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [search, setSearch] = useState<string>("");
     const [query, setQuery] = useState<string>("");
     const limit = 6;
 
+    useEffect(() => {
+        fetchData(API_ENDPOINTS.CATEGORIES.api)
+        .then((result)=>{
+            if(result.error){
+                console.error(result.error);
+            }
+            else{
+                setCategories(result)
+            }
+        })
+        .catch((error)=>console.error("unexpected error occured"))
+    }, [])
 
 
 
     useEffect(() => {
-        fetchData(limit, currentPage, search)
+        fetchData(API_ENDPOINTS.FRUITS.api, limit, currentPage, search)
             .then((result) => {
                 if (result.error) {
                     console.error(result.error);
@@ -88,41 +108,7 @@ const Shop: React.FC = () => {
                             <div className="col-lg-3">
                                 <div className="row g-4">
                                     <div className="col-lg-12">
-                                        <div className="mb-3">
-                                            <h4>Categories</h4>
-                                            <ul className="list-unstyled fruite-categorie">
-                                                <li>
-                                                    <div className="d-flex justify-content-between fruite-name">
-                                                        <a href="#"><i className="fas fa-apple-alt me-2"></i>Apples</a>
-                                                        <span>(3)</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="d-flex justify-content-between fruite-name">
-                                                        <a href="#"><i className="fas fa-apple-alt me-2"></i>Oranges</a>
-                                                        <span>(5)</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="d-flex justify-content-between fruite-name">
-                                                        <a href="#"><i className="fas fa-apple-alt me-2"></i>Strawbery</a>
-                                                        <span>(2)</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="d-flex justify-content-between fruite-name">
-                                                        <a href="#"><i className="fas fa-apple-alt me-2"></i>Banana</a>
-                                                        <span>(8)</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="d-flex justify-content-between fruite-name">
-                                                        <a href="#"><i className="fas fa-apple-alt me-2"></i>Pumpkin</a>
-                                                        <span>(5)</span>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        {categories? <Categories categoriesData={categories}/> :""}
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="mb-3">
@@ -231,7 +217,7 @@ const Shop: React.FC = () => {
                             </div>
                             <div className="col-lg-9">
                                 <div className="row g-4 justify-content-center">
-                                  {fruits.length >0 ? <FruitsComponent fruitsData={fruits} /> :''} 
+                                    {fruits.length > 0 ? <FruitsComponent fruitsData={fruits} /> : ''}
                                     <div className="col-12">
                                         <Pagination
                                             totalItems={totalPages}

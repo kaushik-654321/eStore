@@ -1,11 +1,22 @@
-import React from "react";
-import Header from "./pages/header";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import Header from "./pages/Header";
+import { NavLink } from "react-router-dom";
 
 const Navbar: React.FC = () => {
+const [expand, setExpand] = useState<boolean>(false)
+
+const toggleNavbar = ()=>{
+  setExpand(!expand)
+}
+
+const closeNavbar = ()=>{
+  setExpand(false)
+}
+
+
   return (
     <div className="container-fluid fixed-top">
-      <Header/>
+      <Header />
       <div className="container px-0">
         <nav className="navbar navbar-light bg-white navbar-expand-xl">
           <a href="index.html" className="navbar-brand">
@@ -16,13 +27,14 @@ const Navbar: React.FC = () => {
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarCollapse"
+            onClick={toggleNavbar}
           >
             <span className="fa fa-bars text-primary"></span>
           </button>
-          <div className="collapse navbar-collapse bg-white" id="navbarCollapse">
+          <div className={`navbar-collapse bg-white collapse ${expand ? "show" : ""}`} id="navbarCollapse">
             <div className="navbar-nav mx-auto">
-              <Link to="/" className="nav-item nav-link active">Home</Link>
-              <Link to="/shop" className="nav-item nav-link">Shop</Link>
+              <NavLink to="/" className={({ isActive }) => (isActive ? "nav-item nav-link active" : "nav-item nav-link")} onClick = {closeNavbar}>Home</NavLink>
+              <NavLink to="/shop" className={({ isActive }) => (isActive ? "nav-item nav-link active" : "nav-item nav-link")} onClick = {closeNavbar}>Shop</NavLink>
               <a href="shop-detail.html" className="nav-item nav-link">Shop Detail</a>
               <div className="nav-item dropdown">
                 <a
