@@ -30,7 +30,7 @@ const Shop: React.FC = () => {
     const limit = 6;
 
     useEffect(() => {
-        fetchData(API_ENDPOINTS.CATEGORIES.api)
+        fetchData({API_URL: API_ENDPOINTS.CATEGORIES.api})
         .then((result)=>{
             if(result.error){
                 console.error(result.error);
@@ -45,7 +45,7 @@ const Shop: React.FC = () => {
 
 
     useEffect(() => {
-        fetchData(API_ENDPOINTS.FRUITS.api, limit, currentPage, search)
+        fetchData({API_URL : API_ENDPOINTS.FRUITS.api, limit, page: currentPage, searchQuery: search})
             .then((result) => {
                 if (result.error) {
                     console.error(result.error);
@@ -108,7 +108,7 @@ const Shop: React.FC = () => {
                             <div className="col-lg-3">
                                 <div className="row g-4">
                                     <div className="col-lg-12">
-                                        {categories? <Categories categoriesData={categories}/> :""}
+                                        {categories? <Categories categoriesData={categories} fruitsData={fruits} setFruits={setFruits} setTotalPages={setTotalPages}/> :""}
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="mb-3">

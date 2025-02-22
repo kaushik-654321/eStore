@@ -11,3 +11,8 @@
     color: var(--bs-light);
     border: 1px solid var(--bs-secondary);
 }
+.categories_button{
+    border:0;
+    background: none;
+    color: #81c408;
+}

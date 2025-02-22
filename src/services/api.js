@@ -1,8 +1,14 @@
-const API_URL = "https://fantastic-disco-x457747qvww2p5vp-5000.app.github.dev/fruits/";
 
-export const fetchData = async (API_URL, limit, page, searchQuery) => {
+export const fetchData = async ({API_URL, limit=null, page=null, searchQuery=null, categoryId=null}) => {
     try {
-        const response = await fetch(`${API_URL}?page=${page}&limit=${limit}&search=${searchQuery}`, { credentials: "include" });
+        const url = new URL(API_URL);
+        if (page) url.searchParams.append("page", page);
+        if (limit) url.searchParams.append("limit", limit);
+        if (searchQuery) url.searchParams.append("search", searchQuery);
+        if (categoryId) url.searchParams.append("id", categoryId);
+
+        const response = await fetch(url, { credentials: "include" });
+
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }

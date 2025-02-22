@@ -24,12 +24,7 @@ const FruitsComponent: React.FC<FruitsComponentProps> = ({fruitsData:fruits}) =>
                             alt={fruit.name}
                         />
                     </div>
-                    <div
-                        className="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                        style={{ top: '10px', left: '10px' }}
-                    >
-                        {fruit.category}
-                    </div>
+                    
                     <div className="p-4 border border-secondary border-top-0 rounded-bottom">
                         <h4>{fruit.name}</h4>
                         <p>{fruit.description}</p>
