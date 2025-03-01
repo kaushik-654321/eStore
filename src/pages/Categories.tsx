@@ -18,26 +18,14 @@ type Fruits = {
 
 interface CategoriesComponentProps {
     categoriesData: categories[];
-    fruitsData: Fruits[],
-    setFruits: (fruits: Fruits[]) => void;
-    setTotalPages: (page: number)=>void;
+    setCategory: (catId: string)=>void;
 
 }
 
-const Categories: React.FC<CategoriesComponentProps> = ({ categoriesData: categories, fruitsData: fruits, setFruits, setTotalPages }) => {
+const Categories: React.FC<CategoriesComponentProps> = ({ categoriesData: categories, setCategory }) => {
 
     const handleFiltercategory = (categoryId: string) => {
-        fetchData({API_URL: API_ENDPOINTS.CATEGORIES.api, categoryId})
-        .then((result)=>{
-            if(result.error){
-                console.error(result.error)
-            }
-            else{
-                setFruits(result.fruits);
-                setTotalPages(result.fruits.length);
-            }
-        })
-        .catch((error)=>console.error("unexpected error occured"))
+        setCategory(categoryId)
     }
 
     return (

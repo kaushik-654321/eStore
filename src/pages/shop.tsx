@@ -27,10 +27,12 @@ const Shop: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [search, setSearch] = useState<string>("");
     const [query, setQuery] = useState<string>("");
+    const [category, setCategory] = useState<string>("");
     const limit = 6;
 
     useEffect(() => {
-        fetchData({API_URL: API_ENDPOINTS.CATEGORIES.api})
+       
+        fetchData({API_URL: API_ENDPOINTS.CATEGORIES.api, })
         .then((result)=>{
             if(result.error){
                 console.error(result.error);
@@ -45,7 +47,8 @@ const Shop: React.FC = () => {
 
 
     useEffect(() => {
-        fetchData({API_URL : API_ENDPOINTS.FRUITS.api, limit, page: currentPage, searchQuery: search})
+       
+        fetchData({API_URL : API_ENDPOINTS.FRUITS.api, limit, page: currentPage, searchQuery: search, categoryId : category})
             .then((result) => {
                 if (result.error) {
                     console.error(result.error);
@@ -56,7 +59,7 @@ const Shop: React.FC = () => {
                 }
             })
             .catch((err) => console.error("Unexpected error occurred"));
-    }, [currentPage, query])
+    }, [currentPage, query, category])
 
     useEffect(() => {
         const delayDebouncefn = setTimeout(() => {
@@ -108,7 +111,7 @@ const Shop: React.FC = () => {
                             <div className="col-lg-3">
                                 <div className="row g-4">
                                     <div className="col-lg-12">
-                                        {categories? <Categories categoriesData={categories} fruitsData={fruits} setFruits={setFruits} setTotalPages={setTotalPages}/> :""}
+                                        {categories? <Categories categoriesData={categories} setCategory={setCategory}/> :""}
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="mb-3">

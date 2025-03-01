@@ -7,12 +7,21 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    let { page = 1, limit = 6, search = "" } = req.query;
+    let { page = 1, limit = 6, search = "", id: categoryId } = req.query;
     page = parseInt(page);
     limit = parseInt(limit);
+    let searchQuery = {};
 
-    //search filter
-    const searchQuery = search ? { name: { $regex: `^${search}`, $options: "i" } } : {};
+    if (search) {
+      searchQuery.name = { $regex: `^${search}`, $options: "i" };
+    }
+
+    if (categoryId) {
+      searchQuery.category = categoryId;
+    }
+
+
+
     const fruits = await Fruit.find(searchQuery).skip((page - 1) * limit).limit(limit);
     const totalFruits = await Fruit.countDocuments(searchQuery);
 
@@ -24,23 +33,23 @@ router.get("/", async (req, res) => {
 })
 router.post("/bulk", async (req, res) => {
   try {
-  const fruitsData = req.body;
-  const fruitsWithCategory = await Promise.all(
-    fruitsData.map(async (fruit) => {
-      let category = await Category.findOne({ name: fruit?.category });
-      if (!category) {
-        category = new Category({ name: fruit?.category });
-        await category.save();
-      }
-      return { ...fruit, category: category._id };
-    })
-  );
-  
+    const fruitsData = req.body;
+ 
+    const fruitsWithCategory = await Promise.all(
+      fruitsData.map(async (fruit) => {
+        let category = await Category.findOne({ name: fruit?.category });
+        if (!category) {
+          category = new Category({ name: fruit?.category });
+          await category.save();
+        }
+        return { ...fruit, category: category._id };
+      })
+    );
 
     const fruits = await Fruit.insertMany(fruitsWithCategory);
     res.status(201).json({ message: "Fruits added successfully", data: fruits });
   } catch (error) {
-    res.status(500).json({ error: "Error inserting fruits" });
+    res.status(500).json({ message:error, error: "Error inserting fruits" });
   }
 });
 
