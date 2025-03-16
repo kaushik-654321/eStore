@@ -28,27 +28,30 @@ const Shop: React.FC = () => {
     const [search, setSearch] = useState<string>("");
     const [query, setQuery] = useState<string>("");
     const [category, setCategory] = useState<string>("");
+    const [sort, setSort] = useState<string>("");
+    const [maxPrice, setMaxPrice] = useState<number>(0);
+    const [debouncedMaxPrice, setDebouncedMaxPrice] = useState<number>(0);
     const limit = 6;
 
     useEffect(() => {
-       
-        fetchData({API_URL: API_ENDPOINTS.CATEGORIES.api, })
-        .then((result)=>{
-            if(result.error){
-                console.error(result.error);
-            }
-            else{
-                setCategories(result)
-            }
-        })
-        .catch((error)=>console.error("unexpected error occured"))
+
+        fetchData({ API_URL: API_ENDPOINTS.CATEGORIES.api, })
+            .then((result) => {
+                if (result.error) {
+                    console.error(result.error);
+                }
+                else {
+                    setCategories(result)
+                }
+            })
+            .catch((error) => console.error("unexpected error occured"))
     }, [])
 
 
 
     useEffect(() => {
-       
-        fetchData({API_URL : API_ENDPOINTS.FRUITS.api, limit, page: currentPage, searchQuery: search, categoryId : category})
+
+        fetchData({ API_URL: API_ENDPOINTS.FRUITS.api, limit, page: currentPage, searchQuery: search, categoryId: category, sortsData: sort, minPrice: 0, maxPrice: debouncedMaxPrice })
             .then((result) => {
                 if (result.error) {
                     console.error(result.error);
@@ -59,7 +62,7 @@ const Shop: React.FC = () => {
                 }
             })
             .catch((err) => console.error("Unexpected error occurred"));
-    }, [currentPage, query, category])
+    }, [currentPage, query, category, sort, debouncedMaxPrice])
 
     useEffect(() => {
         const delayDebouncefn = setTimeout(() => {
@@ -69,6 +72,13 @@ const Shop: React.FC = () => {
 
         return () => { clearTimeout(delayDebouncefn) }
     }, [search])
+
+    useEffect(() => {
+        const delayDebouncefn = setTimeout(() => {
+            setDebouncedMaxPrice(maxPrice)
+        }, 500)
+        return () => { clearTimeout(delayDebouncefn) }
+    }, [maxPrice])
 
     return (
         <>
@@ -98,11 +108,11 @@ const Shop: React.FC = () => {
                             <div className="col-xl-3">
                                 <div className="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
                                     <label htmlFor="fruits">Default Sorting:</label>
-                                    <select id="fruits" name="fruitlist" className="border-0 form-select-sm bg-light me-3" form="fruitform">
-                                        <option value="volvo">Nothing</option>
-                                        <option value="saab">Popularity</option>
-                                        <option value="opel">Organic</option>
-                                        <option value="audi">Fantastic</option>
+                                    <select id="fruits" name="fruitlist" className="border-0 form-select-sm bg-light me-3" form="fruitform" onChange={(e) => setSort(e.target.value)}>
+                                        <option value="">Nothing</option>
+                                        <option value="popularity">Popularity</option>
+                                        <option value="organic">Organic</option>
+                                        <option value="rating">Rating</option>
                                     </select>
                                 </div>
                             </div>
@@ -111,16 +121,16 @@ const Shop: React.FC = () => {
                             <div className="col-lg-3">
                                 <div className="row g-4">
                                     <div className="col-lg-12">
-                                        {categories? <Categories categoriesData={categories} setCategory={setCategory}/> :""}
+                                        {categories ? <Categories categoriesData={categories} setCategory={setCategory} /> : ""}
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="mb-3">
                                             <h4 className="mb-2">Price</h4>
-                                            <input type="range" className="form-range w-100" id="rangeInput" name="rangeInput" min="0" max="500" value="0" />
-                                            <output id="amount" name="amount" min-velue="0" max-value="500" htmlFor="rangeInput">0</output>
+                                            <input type="range" className="form-range w-100" id="rangeInput" name="rangeInput" min="0" max="500" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} />
+                                            <output id="amount" name="amount" min-velue="0" max-value="500" htmlFor="rangeInput"> {maxPrice > 0 ? `Upto - $ ${maxPrice}` : 0}</output>
                                         </div>
                                     </div>
-                                    <div className="col-lg-12">
+                                    {/* <div className="col-lg-12">
                                         <div className="mb-3">
                                             <h4>Additional</h4>
                                             <div className="mb-2">
@@ -144,7 +154,7 @@ const Shop: React.FC = () => {
                                                 <label htmlFor="Categories-5"> Expired</label>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                     <div className="col-lg-12">
                                         <h4 className="mb-3">Featured products</h4>
                                         <div className="d-flex align-items-center justify-content-start">
