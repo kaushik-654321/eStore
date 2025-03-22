@@ -43,13 +43,11 @@ const FruitsShop: React.FC = () => {
         })
     }, [])
 
-    const handleTabClick = (tab:string)=>{
-      
-        let data = [...tabContent];
-        data.filter((item)=> item.category == tab);
-        console.log(data);
+    const handleTabClick = (tab: string) => {
+        let filterData = tabContent.filter((item) => item.category == tab);
+        console.log(filterData);
         setTab(tab);
-        // setTabContent([...data]);
+        setTabContent([...filterData]);
     }
     return (
         <div className="container-fluid fruite py-5">
@@ -65,7 +63,7 @@ const FruitsShop: React.FC = () => {
                                 {tabData && tabData.map((tabName) => (
                                     <li className="nav-item fruits-shop">
                                         <a className={`d-flex m-2 py-2 rounded-pill ${tabName.name === tab ? 'bg-active' : 'bg-light'}`}
-                                            data-bs-toggle="pill" href={`#tab-1`} onClick={()=>handleTabClick(tabName.name)}>
+                                            data-bs-toggle="pill" href={`#tab-1`} onClick={() => handleTabClick(tabName.name)}>
                                             <span className="text-dark">{tabName.name}</span>
                                         </a>
                                     </li>
@@ -78,27 +76,27 @@ const FruitsShop: React.FC = () => {
                             <div className="row g-4">
                                 <div className="col-lg-12">
                                     <div className="row g-4">
-                                    {tabContent && tabContent.map((data)=>(
-                                        <div className="col-md-6 col-lg-4 col-xl-3">
-                                            <div className="rounded position-relative fruite-item">
-                                                <div className="fruite-img">
-                                                    <img src={data.image} className="img-fluid w-100 rounded-top" alt="" />
-                                                </div>
-                                                <div className="text-white bg-secondary px-3 py-1 rounded position-absolute" style={{ top: "10px", left: "10px" }}>{data.category}</div>
-                                                <div className="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                    <h4>{data.name}</h4>
-                                                    <p>{data.description}</p>
-                                                    <div className="d-flex justify-content-between flex-lg-wrap">
-                                                        <p className="text-dark fs-5 fw-bold mb-0"> {`$${data.price} / kg`}</p>
-                                                        <a href="#" className="btn border border-secondary rounded-pill px-3 text-primary"><i className="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                        {tabContent && tabContent.map((data) => (
+                                            <div className="col-md-6 col-lg-4 col-xl-3">
+                                                <div className="rounded position-relative fruite-item">
+                                                    <div className="fruite-img">
+                                                        <img src={data.image} className="img-fluid w-100 rounded-top" alt="" />
+                                                    </div>
+                                                    <div className="text-white bg-secondary px-3 py-1 rounded position-absolute" style={{ top: "10px", left: "10px" }}>{data.category}</div>
+                                                    <div className="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                        <h4>{data.name}</h4>
+                                                        <p>{data.description}</p>
+                                                        <div className="d-flex justify-content-between flex-lg-wrap">
+                                                            <p className="text-dark fs-5 fw-bold mb-0"> {`$${data.price} / kg`}</p>
+                                                            <a href="#" className="btn border border-secondary rounded-pill px-3 text-primary"><i className="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                       
-                                    ))}
-                                        
-                                       
+
+                                        ))}
+
+
                                     </div>
                                 </div>
                             </div>
