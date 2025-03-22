@@ -1,20 +1,12 @@
 import React from 'react';
-import { fetchData } from '../services/api';
-import { API_ENDPOINTS } from '../api/apiEndpoints';
+
 
 interface categories {
     "_id": string,
     "name": string,
     "fruitCount": number
 }
-type Fruits = {
-    "_id": string,
-    "name": string,
-    "category": string,
-    "image": string,
-    "description": string,
-    "price": string,
-}
+
 
 interface CategoriesComponentProps {
     categoriesData: categories[];

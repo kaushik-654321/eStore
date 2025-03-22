@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    let { page = 1, limit = 6, search = "", id: categoryId, sort, maxPrice=Infinity  } = req.query;
+    let { page = 1, limit = 6, search = "", id: categoryId, sort, maxPrice = Infinity } = req.query;
     page = parseInt(page);
     limit = parseInt(limit);
     maxPrice = parseFloat(maxPrice);
@@ -20,8 +20,8 @@ router.get("/", async (req, res) => {
     if (categoryId) {
       searchQuery.category = categoryId;
     }
-    if(maxPrice >0){
-      searchQuery.price = {$gte:0, $lte: maxPrice}
+    if (maxPrice > 0) {
+      searchQuery.price = { $gte: 0, $lte: maxPrice }
     }
 
     let sortQuery = {};
@@ -38,6 +38,38 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Error fetching fruits" });
   }
 })
+
+router.get("/group", async (req, res) => {
+  try {
+    const result = await Fruit.aggregate([
+      {
+        $lookup: {
+          from: 'categories', localField: 'category', foreignField: "_id",
+          as: "categoryDetails"
+        }
+      },
+      { $unwind: "$categoryDetails" },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          price: 1,
+          image:1,
+          description:1,
+          category: "$categoryDetails.name"
+        }
+      }
+
+    ]);
+    console.log("+++", result)
+    res.status(200).send({ fruits: result });
+  }
+  catch (error) {
+    res.status(500).send({ error })
+  }
+});
+
+
 router.post("/bulk", async (req, res) => {
   try {
     const fruitsData = req.body;
