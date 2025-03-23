@@ -10,11 +10,14 @@
     "@types/json-server": "^0.14.7",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
+    "@types/react-scroll": "^1.8.10",
     "cors": "^2.8.5",
     "graphql": "^16.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^7.1.5",
+    "react-scroll": "^1.9.3",
     "web-vitals": "^3.1.0"
   },
   "overrides": {

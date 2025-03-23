@@ -61,7 +61,6 @@ router.get("/group", async (req, res) => {
       }
 
     ]);
-    console.log("+++", result)
     res.status(200).send({ fruits: result });
   }
   catch (error) {

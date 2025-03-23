@@ -26,3 +26,14 @@
 .fruits-shop .text-dark {
     width: 130px
 }
+#scrollableDiv {
+    height: 600px; /* Keep height to enable scrolling */
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+#scrollableDiv::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
+
