@@ -25,17 +25,39 @@ router.get("/", async (req, res) => {
     }
 
     let sortQuery = {};
+
+
+    // const fruits = await Fruit.find(searchQuery).sort(sortQuery).skip((page - 1) * limit).limit(limit);
+    const aggregationPipeline = [
+      { $match: searchQuery },
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'category',
+          foreignField: '_id',
+          as: "categoryDetails"
+        }
+      },
+      { $unwind: "$categoryDetails" }
+    ]
+
     if (sort) {
-      sortQuery.sort = -1;
+      sortQuery = { [sort]: -1 };
+      aggregationPipeline.push({ $sort: sortQuery });
     }
 
-    const fruits = await Fruit.find(searchQuery).sort(sortQuery).skip((page - 1) * limit).limit(limit);
-    const totalFruits = await Fruit.countDocuments(searchQuery);
+    aggregationPipeline.push({ $skip: (page - 1) * limit });
 
+    aggregationPipeline.push({ $limit: limit });
+
+
+    const fruits = await Fruit.aggregate(aggregationPipeline);
+
+    const totalFruits = await Fruit.countDocuments(searchQuery);
     res.json({ fruits, totalFruits });
   }
   catch (error) {
-    res.status(500).json({ error: "Error fetching fruits" });
+    res.status(500).json({ error: error });
   }
 })
 
@@ -54,8 +76,8 @@ router.get("/group", async (req, res) => {
           _id: 1,
           name: 1,
           price: 1,
-          image:1,
-          description:1,
+          image: 1,
+          description: 1,
           category: "$categoryDetails.name"
         }
       }

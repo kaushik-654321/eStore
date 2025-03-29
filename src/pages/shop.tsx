@@ -13,6 +13,10 @@ type Fruits = {
     "image": string,
     "description": string,
     "price": string,
+    "categoryDetails": {
+        "_id": string;
+        "name": string
+    }
 }
 
 type Categories = {

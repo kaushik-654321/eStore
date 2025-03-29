@@ -6,13 +6,18 @@ type Fruits = {
     "image": string,
     "description": string,
     "price": string,
+    "categoryDetails": {
+        "_id": string;
+        "name": string
+    }
 }
 // Define Props Interface
 interface FruitsComponentProps {
     fruitsData: Fruits[];
-  }
+}
 
-const FruitsComponent: React.FC<FruitsComponentProps> = ({fruitsData:fruits}) => {
+const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits }) => {
+
     return (
         fruits?.map(fruit => (
             <div key={fruit._id} className="col-md-6 col-lg-6 col-xl-4">
@@ -24,7 +29,8 @@ const FruitsComponent: React.FC<FruitsComponentProps> = ({fruitsData:fruits}) =>
                             alt={fruit.name}
                         />
                     </div>
-                    
+                    <div className="text-white bg-secondary px-3 py-1 rounded position-absolute" style={{ top: "10px", left: "10px" }}>{fruit.categoryDetails.name}</div>
+
                     <div className="p-4 border border-secondary border-top-0 rounded-bottom">
                         <h4>{fruit.name}</h4>
                         <p>{fruit.description}</p>
