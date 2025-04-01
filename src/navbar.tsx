@@ -3,15 +3,15 @@ import Header from "./pages/Header";
 import { NavLink } from "react-router-dom";
 
 const Navbar: React.FC = () => {
-const [expand, setExpand] = useState<boolean>(false)
+  const [expand, setExpand] = useState<boolean>(false)
 
-const toggleNavbar = ()=>{
-  setExpand(!expand)
-}
+  const toggleNavbar = () => {
+    setExpand(!expand)
+  }
 
-const closeNavbar = ()=>{
-  setExpand(false)
-}
+  const closeNavbar = () => {
+    setExpand(false)
+  }
 
 
   return (
@@ -33,10 +33,10 @@ const closeNavbar = ()=>{
           </button>
           <div className={`navbar-collapse bg-white collapse ${expand ? "show" : ""}`} id="navbarCollapse">
             <div className="navbar-nav mx-auto">
-              <NavLink to="/" className={({ isActive }) => (isActive ? "nav-item nav-link active" : "nav-item nav-link")} onClick = {closeNavbar}>Home</NavLink>
-              <NavLink to="/shop" className={({ isActive }) => (isActive ? "nav-item nav-link active" : "nav-item nav-link")} onClick = {closeNavbar}>Shop</NavLink>
-              <NavLink to="/shop-detail" className={({ isActive }) => (isActive ? "nav-item nav-link active" : "nav-item nav-link")} onClick = {closeNavbar}>Shop Details</NavLink>
-             
+              <NavLink to="/" className={({ isActive }) => (isActive ? "nav-item nav-link active" : "nav-item nav-link")} onClick={closeNavbar}>Home</NavLink>
+              <NavLink to="/shop" className={({ isActive }) => (isActive ? "nav-item nav-link active" : "nav-item nav-link")} onClick={closeNavbar}>Shop</NavLink>
+              <NavLink to="/shop-detail" className={({ isActive }) => (isActive ? "nav-item nav-link active" : "nav-item nav-link")} onClick={closeNavbar}>Shop Details</NavLink>
+
               {/* <a href="shop-detail.html" className="nav-item nav-link">Shop Detail</a> */}
               <div className="nav-item dropdown">
                 <a
@@ -47,7 +47,8 @@ const closeNavbar = ()=>{
                   Pages
                 </a>
                 <div className="dropdown-menu m-0 bg-secondary rounded-0">
-                  <a href="cart.html" className="dropdown-item">Cart</a>
+                  <NavLink to="/cart" className={({ isActive }) => (isActive ? "dropdown-item active" : "dropdown-item")} onClick={closeNavbar}>Cart</NavLink>
+                  {/* <a href="cart.html" className="dropdown-item">Cart</a> */}
                   <a href="checkout.html" className="dropdown-item">Checkout</a>
                   <a href="testimonial.html" className="dropdown-item">Testimonial</a>
                   <a href="404.html" className="dropdown-item">404 Page</a>
