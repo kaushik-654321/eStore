@@ -35,6 +35,8 @@ const closeNavbar = ()=>{
             <div className="navbar-nav mx-auto">
               <NavLink to="/" className={({ isActive }) => (isActive ? "nav-item nav-link active" : "nav-item nav-link")} onClick = {closeNavbar}>Home</NavLink>
               <NavLink to="/shop" className={({ isActive }) => (isActive ? "nav-item nav-link active" : "nav-item nav-link")} onClick = {closeNavbar}>Shop</NavLink>
+              <NavLink to="/shop-detail" className={({ isActive }) => (isActive ? "nav-item nav-link active" : "nav-item nav-link")} onClick = {closeNavbar}>Shop Details</NavLink>
+             
               {/* <a href="shop-detail.html" className="nav-item nav-link">Shop Detail</a> */}
               <div className="nav-item dropdown">
                 <a

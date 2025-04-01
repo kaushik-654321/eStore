@@ -8,16 +8,18 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/HomePage';
 import Spinner from './Spinner';
 import Shop from './pages/shop';
+import ShopDetails from './pages/ShopDetails';
 
 const App: React.FC = () => {
   return (
     <div className="App">
       <Router>
-        <Spinner/>
+        <Spinner />
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/shop" element={<Shop/>}></Route>
+          <Route path="/shop" element={<Shop />}></Route>
+          <Route path="/shop-detail" element={<ShopDetails />}></Route>
         </Routes>
 
         <Footer />
