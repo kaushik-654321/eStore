@@ -37,3 +37,19 @@
     display: none; /* Chrome, Safari */
 }
 
+.fruite-item:hover {
+    box-shadow: 0 0 55px rgba(0, 0, 0, 0.4);
+}
+.fruite-item .fruite-img {
+    overflow: hidden;
+    transition: 0.5s;
+    border-radius: 10px 10px 0 0;
+}
+
+ .fruite-img img {
+    transition: 0.5s;
+}
+
+.fruite-img img:hover {
+    transform: scale(1.3);
+}

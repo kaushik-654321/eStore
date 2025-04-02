@@ -6,6 +6,7 @@ import FruitsComponent from './Fruits';
 import Categories from './Categories';
 import { API_ENDPOINTS } from '../api/apiEndpoints';
 
+
 type Fruits = {
     "_id": string,
     "name": string,
@@ -98,7 +99,7 @@ const Shop: React.FC = () => {
             <div className="container-fluid fruite py-5"></div>
 
             <div className="container py-5">
-                <h1 className="mb-4">Fresh fruits shop</h1>
+                <h1 className="mb-4 text-start">Fresh fruits shop</h1>
                 <div className="row g-4">
                     <div className="col-lg-12">
                         <div className="row g-4">

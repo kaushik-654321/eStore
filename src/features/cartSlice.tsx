@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { STATES } from "mongoose";
+
 
 interface cartItem {
     id: string;
     name: string;
     price: number;
     image: string;
-    quantity: number
+    quantity: number;
+    total?: number;
 }
 
 interface cartState {
@@ -23,13 +24,16 @@ const cartSlice = createSlice({
     reducers: {
         addToCart: (state, action: PayloadAction<cartItem>) => {
             const existingItem = state.items.find(item => item.id === action.payload.id);
+
             if (existingItem) {
+
                 existingItem.quantity += 1;
+                existingItem.price *= existingItem.quantity;
             }
             else {
-                state.items.push({ ...action.payload, quantity: 1 })
-            }
+                state.items.push({ ...action.payload, quantity: 1, total:action.payload.price })
 
+            }
         },
         removeCart: (state, action: PayloadAction<string>) => {
             state.items = state.items.filter(item => item.id !== action.payload);

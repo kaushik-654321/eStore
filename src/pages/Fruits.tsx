@@ -1,4 +1,9 @@
 import React from 'react';
+import { addToCart } from '../features/cartSlice';
+import { AppDispatch } from '../app/store';
+import { useDispatch } from 'react-redux';
+
+
 type Fruits = {
     "_id": string,
     "name": string,
@@ -17,6 +22,10 @@ interface FruitsComponentProps {
 }
 
 const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits }) => {
+    const dispatch = useDispatch<AppDispatch>();
+    const ItemaddTocart = (Itemdata: Fruits) => {
+        dispatch(addToCart({ id: Itemdata._id, name: Itemdata.name, price: Number(Itemdata.price), image: Itemdata.image, quantity: 1 }))
+    }
 
     return (
         fruits?.map(fruit => (
@@ -36,9 +45,11 @@ const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits })
                         <p>{fruit.description}</p>
                         <div className="d-flex justify-content-between flex-lg-wrap">
                             <p className="text-dark fs-5 fw-bold mb-0">{`$ ${fruit.price} / kg`}</p>
-                            <a href="#" className="btn border border-secondary rounded-pill px-3 text-primary">
-                                <i className="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                            </a>
+
+                            <button className="btn border border-secondary rounded-pill px-3 text-primary" onClick={() => ItemaddTocart(fruit)}>
+                                <i className="fa fa-shopping-bag me-2 text-primary"></i>  Add to cart
+                            </button>
+
                         </div>
                     </div>
                 </div>
