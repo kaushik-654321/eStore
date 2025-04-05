@@ -2,30 +2,20 @@ import React from 'react';
 import { addToCart } from '../features/cartSlice';
 import { AppDispatch } from '../app/store';
 import { useDispatch } from 'react-redux';
+import { Items } from '../types/item.type';
 
-
-type Fruits = {
-    "_id": string,
-    "name": string,
-    "category": string,
-    "image": string,
-    "description": string,
-    "price": string,
-    "categoryDetails": {
-        "_id": string;
-        "name": string
-    }
-}
 // Define Props Interface
 interface FruitsComponentProps {
-    fruitsData: Fruits[];
+    fruitsData: Items[];
 }
 
 const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits }) => {
     const dispatch = useDispatch<AppDispatch>();
-    const ItemaddTocart = (Itemdata: Fruits) => {
-        dispatch(addToCart({ id: Itemdata._id, name: Itemdata.name, price: Number(Itemdata.price), image: Itemdata.image, quantity: 1 }))
+    const ItemaddTocart = (Itemdata: Items) => {
+        dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
     }
+
+  
 
     return (
         fruits?.map(fruit => (

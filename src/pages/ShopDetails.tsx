@@ -202,7 +202,7 @@ const ShopDetails: React.FC = () => {
                                     </div>
                                     <div className="col-lg-12">
                                         <div className="border-bottom rounded my-4">
-                                            <textarea name="" id="" className="form-control border-0" cols={30} rows={8} placeholder="Your Review *" spellcheck="false"></textarea>
+                                            <textarea name="" id="" className="form-control border-0" cols={30} rows={8} placeholder="Your Review *" spellCheck={"false"}></textarea>
                                         </div>
                                     </div>
                                     <div className="col-lg-12">

@@ -1,48 +1,62 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { Items } from "../types/item.type";
 
 
-interface cartItem {
-    id: string;
-    name: string;
-    price: number;
-    image: string;
-    quantity: number;
-    total?: number;
-}
+
 
 interface cartState {
-    items: cartItem[]
+    items: Items[];
+    isLoggedIn: false;
 }
 
-const initialState: cartState = {
+const initialState: Partial<cartState> = {
     items: []
 }
+// Thunks for server sync
+// export const fetchUserCart = createAsyncThunk(
+//     'cart/fetchUserCart',
+//     async(userId : string)=>{
+//         const res = a
+
+//     }
+// )
+
+// export const syncCartToServer = createAsyncThunk(
+//     'cart/syncCartToServer',
+//     async(payload:{userId: string; items: cartItem[]} ){
+
+//     }
+// )
 
 const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
-        addToCart: (state, action: PayloadAction<cartItem>) => {
-            const existingItem = state.items.find(item => item.id === action.payload.id);
-
+        addToCart: (state, action: PayloadAction<Items>) => {
+           
+            const existingItem: Items = state.items.find(item => item._id === action.payload._id);
+           
             if (existingItem) {
-
+                console.log(action.payload);
                 existingItem.quantity += 1;
+                console.log(existingItem.quantity);
                 existingItem.price *= existingItem.quantity;
             }
             else {
-                state.items.push({ ...action.payload, quantity: 1, total:action.payload.price })
+                state.items.push({ ...action.payload, quantity: 1, total: action.payload.price })
 
             }
         },
         removeCart: (state, action: PayloadAction<string>) => {
-            state.items = state.items.filter(item => item.id !== action.payload);
+            state.items = state.items.filter(item => item._id !== action.payload);
         },
-        updateQuantity: (state, action: PayloadAction<{ id: string; quantity: number }>) => {
-            const item = state.items.find(item => item.id === action.payload.id);
+        updateQuantity: (state, action: PayloadAction<{ _id: string; quantity: number }>) => {
+            const item = state.items.find(item => item._id === action.payload._id);
             if (item && action.payload.quantity > 0) {
                 item.quantity = action.payload.quantity;
+                
             }
+            
         },
         clearCart: (state) => {
             state.items = [];

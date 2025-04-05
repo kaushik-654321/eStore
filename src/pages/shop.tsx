@@ -5,20 +5,9 @@ import Pagination from './Pagination';
 import FruitsComponent from './Fruits';
 import Categories from './Categories';
 import { API_ENDPOINTS } from '../api/apiEndpoints';
+import { Items } from '../types/item.type';
 
 
-type Fruits = {
-    "_id": string,
-    "name": string,
-    "category": string,
-    "image": string,
-    "description": string,
-    "price": string,
-    "categoryDetails": {
-        "_id": string;
-        "name": string
-    }
-}
 
 type Categories = {
     "_id": string,
@@ -26,7 +15,7 @@ type Categories = {
     "fruitCount": number
 }
 const Shop: React.FC = () => {
-    const [fruits, setFruits] = useState<Fruits[]>([]);
+    const [fruits, setFruits] = useState<Items[]>([]);
     const [categories, setCategories] = useState<Categories[]>([]);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [currentPage, setCurrentPage] = useState<number>(1);

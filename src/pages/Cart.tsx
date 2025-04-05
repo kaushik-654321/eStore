@@ -1,10 +1,21 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../app/store';
+import { addToCart, updateQuantity } from '../features/cartSlice';
+import { Items } from '../types/item.type';
+
 
 function CartPage() {
+    const dispatch = useDispatch();
     const cartItems = useSelector((state: RootState) => state.cart.items);
-    console.log(cartItems);
+    const ItemaddTocart = (Itemdata: Items) => {
+        dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
+    }
+
+    const itemremovedFromcart = (Itemdata: Items) => {
+        dispatch(updateQuantity({ _id: Itemdata._id, quantity: Itemdata.quantity - 1 }))
+    }
+
     return (
         <>
             <div className="container-fluid page-header py-5">
@@ -47,13 +58,13 @@ function CartPage() {
                                         <td>
                                             <div className="input-group quantity mt-4" style={{ width: "100px" }}>
                                                 <div className="input-group-btn">
-                                                    <button className="btn btn-sm btn-minus rounded-circle bg-light border" >
+                                                    <button className="btn btn-sm btn-minus rounded-circle bg-light border" onClick={() => itemremovedFromcart(cartData)}>
                                                         <i className="fa fa-minus"></i>
                                                     </button>
                                                 </div>
-                                                <input type="text" className="form-control form-control-sm text-center border-0" defaultValue="1" />
+                                                <input type="text" className="form-control form-control-sm text-center border-0" value={cartData.quantity} />
                                                 <div className="input-group-btn">
-                                                    <button className="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                    <button className="btn btn-sm btn-plus rounded-circle bg-light border" onClick={() => ItemaddTocart(cartData)}>
                                                         <i className="fa fa-plus"></i>
                                                     </button>
                                                 </div>
