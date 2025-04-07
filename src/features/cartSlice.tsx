@@ -1,17 +1,18 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { Items } from "../types/item.type";
+import { cartState, Items } from "../types/item.type";
+import { calculateCartTotal } from "../utils/utility";
 
 
 
 
-interface cartState {
-    items: Items[];
-    isLoggedIn: false;
-}
+
 
 const initialState: Partial<cartState> = {
-    items: []
+    items: [],
+    cartTotal: 0
 }
+
+
 // Thunks for server sync
 // export const fetchUserCart = createAsyncThunk(
 //     'cart/fetchUserCart',
@@ -33,30 +34,31 @@ const cartSlice = createSlice({
     initialState,
     reducers: {
         addToCart: (state, action: PayloadAction<Items>) => {
-           
+
             const existingItem: Items = state.items.find(item => item._id === action.payload._id);
-           
+
             if (existingItem) {
-                console.log(action.payload);
                 existingItem.quantity += 1;
-                console.log(existingItem.quantity);
-                existingItem.price *= existingItem.quantity;
+                existingItem.total = existingItem.price * existingItem.quantity;
             }
             else {
                 state.items.push({ ...action.payload, quantity: 1, total: action.payload.price })
 
             }
+            state.cartTotal = calculateCartTotal(state.items);
+            console.log(calculateCartTotal(state.items));
         },
-        removeCart: (state, action: PayloadAction<string>) => {
-            state.items = state.items.filter(item => item._id !== action.payload);
+        removeCart: (state, action: PayloadAction<{ _id: string }>) => {
+            state.items = state.items.filter(item => item._id !== action.payload._id);
+            state.cartTotal = calculateCartTotal(state.items);
         },
         updateQuantity: (state, action: PayloadAction<{ _id: string; quantity: number }>) => {
             const item = state.items.find(item => item._id === action.payload._id);
             if (item && action.payload.quantity > 0) {
                 item.quantity = action.payload.quantity;
-                
+                item.total = item.price * item.quantity;
             }
-            
+            state.cartTotal = calculateCartTotal(state.items);
         },
         clearCart: (state) => {
             state.items = [];

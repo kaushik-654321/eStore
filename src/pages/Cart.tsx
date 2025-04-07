@@ -1,31 +1,31 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../app/store';
-import { addToCart, updateQuantity } from '../features/cartSlice';
+import { addToCart, updateQuantity, removeCart } from '../features/cartSlice';
 import { Items } from '../types/item.type';
+import { PageHeader } from './PageHeader';
 
 
 function CartPage() {
     const dispatch = useDispatch();
     const cartItems = useSelector((state: RootState) => state.cart.items);
+    const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
     const ItemaddTocart = (Itemdata: Items) => {
         dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
     }
 
-    const itemremovedFromcart = (Itemdata: Items) => {
+    const itemupdatecart = (Itemdata: Items) => {
         dispatch(updateQuantity({ _id: Itemdata._id, quantity: Itemdata.quantity - 1 }))
+    }
+
+    const itemremovecart = (Itemdata: Items) => {
+        dispatch(removeCart({ _id: Itemdata._id }))
     }
 
     return (
         <>
-            <div className="container-fluid page-header py-5">
-                <h1 className="text-center text-white display-6">Cart</h1>
-                <ol className="breadcrumb justify-content-center mb-0">
-                    <li className="breadcrumb-item"><a href="#">Home</a></li>
-                    <li className="breadcrumb-item"><a href="#">Pages</a></li>
-                    <li className="breadcrumb-item active text-white">Cart</li>
-                </ol>
-            </div>
+
+            <PageHeader breadcrumb={'Cart'} />
 
             <div className="container-fluid py-5">
                 <div className="container py-5">
@@ -38,7 +38,7 @@ function CartPage() {
                                     <th scope="col">Price</th>
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Total</th>
-                                    <th scope="col">Handle</th>
+                                    <th scope="col">Remove</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -58,7 +58,7 @@ function CartPage() {
                                         <td>
                                             <div className="input-group quantity mt-4" style={{ width: "100px" }}>
                                                 <div className="input-group-btn">
-                                                    <button className="btn btn-sm btn-minus rounded-circle bg-light border" onClick={() => itemremovedFromcart(cartData)}>
+                                                    <button className="btn btn-sm btn-minus rounded-circle bg-light border" onClick={() => itemupdatecart(cartData)}>
                                                         <i className="fa fa-minus"></i>
                                                     </button>
                                                 </div>
@@ -74,7 +74,7 @@ function CartPage() {
                                             <p className="mb-0 mt-4">$ {cartData.total}</p>
                                         </td>
                                         <td>
-                                            <button className="btn btn-md rounded-circle bg-light border mt-4" >
+                                            <button className="btn btn-md rounded-circle bg-light border mt-4" onClick={() => itemremovecart(cartData)}>
                                                 <i className="fa fa-times text-danger"></i>
                                             </button>
                                         </td>
@@ -96,19 +96,19 @@ function CartPage() {
                                     <h1 className="display-6 mb-4">Cart <span className="fw-normal">Total</span></h1>
                                     <div className="d-flex justify-content-between mb-4">
                                         <h5 className="mb-0 me-4">Subtotal:</h5>
-                                        <p className="mb-0">$96.00</p>
+                                        <p className="mb-0">${cartTotal.toFixed(2)}</p>
                                     </div>
                                     <div className="d-flex justify-content-between">
                                         <h5 className="mb-0 me-4">Shipping</h5>
                                         <div className="">
-                                            <p className="mb-0">Flat rate: $3.00</p>
+                                            <p className="mb-0">Flat rate: $0.00</p>
                                         </div>
                                     </div>
-                                    <p className="mb-0 text-end">Shipping to Ukraine.</p>
+                                    <p className="mb-0 text-end">Shipping to India.</p>
                                 </div>
                                 <div className="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                                     <h5 className="mb-0 ps-4 me-4">Total</h5>
-                                    <p className="mb-0 pe-4">$99.00</p>
+                                    <p className="mb-0 pe-4">${cartTotal.toFixed(2)}</p>
                                 </div>
                                 <button className="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
                             </div>

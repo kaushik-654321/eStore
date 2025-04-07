@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import Header from "./pages/Header";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "./app/store";
 
 const Navbar: React.FC = () => {
-  const [expand, setExpand] = useState<boolean>(false)
+  const [expand, setExpand] = useState<boolean>(false);
+  const cartCount = useSelector((state: RootState)=>state.cart.items.length);
 
   const toggleNavbar = () => {
     setExpand(!expand)
@@ -49,7 +52,8 @@ const Navbar: React.FC = () => {
                 <div className="dropdown-menu m-0 bg-secondary rounded-0">
                   <NavLink to="/cart" className={({ isActive }) => (isActive ? "dropdown-item active" : "dropdown-item")} onClick={closeNavbar}>Cart</NavLink>
                   {/* <a href="cart.html" className="dropdown-item">Cart</a> */}
-                  <a href="checkout.html" className="dropdown-item">Checkout</a>
+                  {/* <a href="checkout.html" className="dropdown-item">Checkout</a> */}
+                  <NavLink to="/checkout" className={({ isActive }) => (isActive ? "dropdown-item active" : "dropdown-item")} onClick={closeNavbar}>CheckOut</NavLink>
                   <a href="testimonial.html" className="dropdown-item">Testimonial</a>
                   <a href="404.html" className="dropdown-item">404 Page</a>
                 </div>
@@ -70,7 +74,7 @@ const Navbar: React.FC = () => {
                   className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                   style={{ top: "-5px", left: "15px", height: "20px", minWidth: "20px" }}
                 >
-                  3
+                  {cartCount}
                 </span>
               </a>
               <a href="#" className="my-auto">

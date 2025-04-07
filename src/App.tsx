@@ -10,6 +10,7 @@ import Spinner from './Spinner';
 import Shop from './pages/shop';
 import ShopDetails from './pages/ShopDetails';
 import CartPage from './pages/Cart';
+import { CheckoutPage } from './pages/Checkout';
 
 const App: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const App: React.FC = () => {
           <Route path="/shop" element={<Shop />}></Route>
           <Route path="/shop-detail" element={<ShopDetails />}></Route>
           <Route path="/cart" element={<CartPage />}></Route>
+          <Route path="/checkout" element={<CheckoutPage />}></Route>
         </Routes>
 
         <Footer />

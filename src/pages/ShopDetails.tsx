@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { fetchData } from '../services/api';
 import { API_ENDPOINTS } from '../api/apiEndpoints';
 import SearchModal from './SearchModal';
+import { PageHeader } from './PageHeader';
 
 
 type Fruits = {
@@ -24,19 +25,13 @@ type Categories = {
 }
 
 const ShopDetails: React.FC = () => {
-    
+
 
     return (
         <>
             <SearchModal />
-            <div className="container-fluid page-header py-5">
-                <h1 className="text-center text-white display-6">Shop Detail</h1>
-                <ol className="breadcrumb justify-content-center mb-0">
-                    <li className="breadcrumb-item"><a href="#">Home</a></li>
-                    <li className="breadcrumb-item"><a href="#">Pages</a></li>
-                    <li className="breadcrumb-item active text-white">Shop Detail</li>
-                </ol>
-            </div>
+            <PageHeader breadcrumb={'Shop Detail'} />
+
             <div className="container-fluid fruite py-5"></div>
             <div className="container py-5">
                 <div className="row g-4 mb-5">

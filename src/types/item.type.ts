@@ -12,3 +12,9 @@ export interface Items {
         "name": string
     }
 }
+
+export interface cartState {
+    items: Items[];
+    isLoggedIn: false;
+    cartTotal: number;
+}

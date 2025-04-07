@@ -6,6 +6,7 @@ import FruitsComponent from './Fruits';
 import Categories from './Categories';
 import { API_ENDPOINTS } from '../api/apiEndpoints';
 import { Items } from '../types/item.type';
+import { PageHeader } from './PageHeader';
 
 
 
@@ -77,16 +78,8 @@ const Shop: React.FC = () => {
     return (
         <>
             <SearchModal />
-            <div className="container-fluid page-header py-5">
-                <h1 className="text-center text-white display-6">Shop</h1>
-                <ol className="breadcrumb justify-content-center mb-0">
-                    <li className="breadcrumb-item"><a href="#">Home</a></li>
-                    <li className="breadcrumb-item"><a href="#">Pages</a></li>
-                    <li className="breadcrumb-item active text-white">Shop</li>
-                </ol>
-            </div>
+            <PageHeader breadcrumb={'Shop'} />
             <div className="container-fluid fruite py-5"></div>
-
             <div className="container py-5">
                 <h1 className="mb-4 text-start">Fresh fruits shop</h1>
                 <div className="row g-4">
