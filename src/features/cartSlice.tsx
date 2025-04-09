@@ -9,7 +9,7 @@ import { calculateCartTotal } from "../utils/utility";
 
 const initialState: Partial<cartState> = {
     items: [],
-    cartTotal: 0
+    
 }
 
 
@@ -51,12 +51,16 @@ const cartSlice = createSlice({
         removeCart: (state, action: PayloadAction<{ _id: string }>) => {
             state.items = state.items.filter(item => item._id !== action.payload._id);
             state.cartTotal = calculateCartTotal(state.items);
+           
         },
         updateQuantity: (state, action: PayloadAction<{ _id: string; quantity: number }>) => {
             const item = state.items.find(item => item._id === action.payload._id);
             if (item && action.payload.quantity > 0) {
                 item.quantity = action.payload.quantity;
                 item.total = item.price * item.quantity;
+            }
+            if(item && action.payload.quantity <1){
+                state.items = state.items.filter(item => item._id !== action.payload._id);
             }
             state.cartTotal = calculateCartTotal(state.items);
         },

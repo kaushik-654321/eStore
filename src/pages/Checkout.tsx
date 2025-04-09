@@ -1,13 +1,18 @@
 import React from 'react';
 import { PageHeader } from './PageHeader';
+import { useSelector } from 'react-redux';
+import { RootState } from '../app/store';
 
 export const CheckoutPage = () => {
+    const cartItems = useSelector((state: RootState) => state.cart.items);
+    const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
     return (
         <>
-            <PageHeader breadcrumb={'Checkout'}/>
+            <PageHeader breadcrumb={'Checkout'} />
             {/* <!-- Checkout Page Start --> */}
             <div className="container-fluid py-5">
-                <div className="container py-5">
+                {cartItems?.length < 1 && <span>add some items</span>}
+                {cartItems?.length > 0 && <div className="container py-5">
                     <h1 className="mb-4">Billing details</h1>
                     <form action="#">
                         <div className="row g-5">
@@ -68,6 +73,7 @@ export const CheckoutPage = () => {
                                 </div>
                             </div>
                             <div className="col-md-12 col-lg-6 col-xl-5">
+
                                 <div className="table-responsive">
                                     <table className="table">
                                         <thead>
@@ -80,39 +86,19 @@ export const CheckoutPage = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <th scope="row">
-                                                    <div className="d-flex align-items-center mt-2">
-                                                        <img src="img/vegetable-item-2.jpg" className="img-fluid rounded-circle" style={{ width: "90px", height: "90px" }} alt="" />
-                                                    </div>
-                                                </th>
-                                                <td className="py-5">Awesome Brocoli</td>
-                                                <td className="py-5">$69.00</td>
-                                                <td className="py-5">2</td>
-                                                <td className="py-5">$138.00</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">
-                                                    <div className="d-flex align-items-center mt-2">
-                                                        <img src="img/vegetable-item-5.jpg" className="img-fluid rounded-circle" style={{ width: "90px", height: "90px" }} alt="" />
-                                                    </div>
-                                                </th>
-                                                <td className="py-5">Potatoes</td>
-                                                <td className="py-5">$69.00</td>
-                                                <td className="py-5">2</td>
-                                                <td className="py-5">$138.00</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">
-                                                    <div className="d-flex align-items-center mt-2">
-                                                        <img src="img/vegetable-item-3.png" className="img-fluid rounded-circle" style={{ width: "90px", height: "90px" }} alt="" />
-                                                    </div>
-                                                </th>
-                                                <td className="py-5">Big Banana</td>
-                                                <td className="py-5">$69.00</td>
-                                                <td className="py-5">2</td>
-                                                <td className="py-5">$138.00</td>
-                                            </tr>
+                                            {cartItems?.map((cartData) => (
+                                                <tr>
+                                                    <th scope="row">
+                                                        <div className="d-flex align-items-center mt-2">
+                                                            <img src={cartData.image} className="img-fluid rounded-circle" style={{ width: "90px", height: "90px" }} alt={cartData.name} />
+                                                        </div>
+                                                    </th>
+                                                    <td className="py-5">{cartData.name}</td>
+                                                    <td className="py-5">${cartData.price}</td>
+                                                    <td className="py-5">{cartData.quantity}</td>
+                                                    <td className="py-5">${cartData.total}</td>
+                                                </tr>
+                                            ))}
                                             <tr>
                                                 <th scope="row">
                                                 </th>
@@ -123,7 +109,7 @@ export const CheckoutPage = () => {
                                                 </td>
                                                 <td className="py-5">
                                                     <div className="py-3 border-bottom border-top">
-                                                        <p className="mb-0 text-dark">$414.00</p>
+                                                        <p className="mb-0 text-dark">${cartTotal?.toFixed(2)}</p>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -140,11 +126,11 @@ export const CheckoutPage = () => {
                                                     </div>
                                                     <div className="form-check text-start">
                                                         <input type="checkbox" className="form-check-input bg-primary border-0" id="Shipping-2" name="Shipping-1" value="Shipping" />
-                                                        <label className="form-check-label" htmlFor="Shipping-2">Flat rate: $15.00</label>
+                                                        <label className="form-check-label" htmlFor="Shipping-2">Flat rate: $0.00</label>
                                                     </div>
                                                     <div className="form-check text-start">
                                                         <input type="checkbox" className="form-check-input bg-primary border-0" id="Shipping-3" name="Shipping-1" value="Shipping" />
-                                                        <label className="form-check-label" htmlFor="Shipping-3">Local Pickup: $8.00</label>
+                                                        <label className="form-check-label" htmlFor="Shipping-3">Local Pickup: $0.00</label>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -158,7 +144,7 @@ export const CheckoutPage = () => {
                                                 <td className="py-5"></td>
                                                 <td className="py-5">
                                                     <div className="py-3 border-bottom border-top">
-                                                        <p className="mb-0 text-dark">$135.00</p>
+                                                        <p className="mb-0 text-dark">${cartTotal?.toFixed(2)}</p>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -204,7 +190,7 @@ export const CheckoutPage = () => {
                             </div>
                         </div>
                     </form>
-                </div>
+                </div>}
             </div>
             {/* <!-- Checkout Page End --> */}
         </>

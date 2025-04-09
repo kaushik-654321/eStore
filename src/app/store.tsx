@@ -2,12 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "../features/cartSlice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
-import { cartSyncMiddleware } from "../utils/CartSync";
+
 
 const cartPersistConfig = {
     key: 'cart',
     storage,
-    whitelist: ['items']
+    whitelist: ['items', 'cartTotal']
 
 }
 
