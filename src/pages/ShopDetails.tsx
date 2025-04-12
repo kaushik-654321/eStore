@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchData } from '../services/api';
 import { API_ENDPOINTS } from '../api/apiEndpoints';
-import SearchModal from './SearchModal';
+import SearchModal from './Modal';
 import { PageHeader } from './PageHeader';
 
 
@@ -29,7 +29,6 @@ const ShopDetails: React.FC = () => {
 
     return (
         <>
-            <SearchModal />
             <PageHeader breadcrumb={'Shop Detail'} />
 
             <div className="container-fluid fruite py-5"></div>

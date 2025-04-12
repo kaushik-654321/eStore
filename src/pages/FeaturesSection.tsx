@@ -1,7 +1,11 @@
 import React from 'react';
+import ModalPage from './Modal';
 
 const FeaturesSection: React.FC = () => {
+  
   return (
+    <>
+    <ModalPage/>
     <div className="container-fluid featurs py-5">
       <div className="container py-5">
         <div className="row g-4">
@@ -52,6 +56,7 @@ const FeaturesSection: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

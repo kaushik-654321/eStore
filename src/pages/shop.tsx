@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SearchModal from './SearchModal';
+import SearchModal from './Modal';
 import { fetchData } from '../services/api';
 import Pagination from './Pagination';
 import FruitsComponent from './Fruits';
@@ -77,7 +77,6 @@ const Shop: React.FC = () => {
 
     return (
         <>
-            <SearchModal />
             <PageHeader breadcrumb={'Shop'} />
             <div className="container-fluid fruite py-5"></div>
             <div className="container py-5">

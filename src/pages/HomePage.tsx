@@ -9,11 +9,13 @@ import BestsellerProducts from './BestSellerProducts';
 import Facts from './Facts';
 import Testimonials from '../testimonials';
 
+
 const Home: React.FC = () => {
     return (
         <>
             <Hero />
             <FeaturesSection />
+    
             <FruitsShop />
             <FeaturesStart />
             <VegetableShop />
