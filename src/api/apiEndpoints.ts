@@ -6,5 +6,8 @@ export const API_ENDPOINTS = {
     },
     CATEGORIES: {
         api: `${API_BASE_URL}/category`
+    },
+    USER: {
+        api: `${API_BASE_URL}/user`
     }
 };
