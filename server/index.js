@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import apiRoutes from "./routes/apiRoutes.js"; 
 import fruitRoutes from "./routes/fruitRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 console.log("Mongo URI:", process.env.MONGO_URI);
@@ -34,6 +35,7 @@ mongoose
 // Sample route
 app.use("/fruits", fruitRoutes);
 app.use("/category", categoryRoutes);
+app.use("/auth", userRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

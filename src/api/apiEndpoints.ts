@@ -8,6 +8,6 @@ export const API_ENDPOINTS = {
         api: `${API_BASE_URL}/category`
     },
     USER: {
-        api: `${API_BASE_URL}/user`
+        api: `${API_BASE_URL}/api`
     }
 };
