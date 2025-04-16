@@ -1,26 +1,35 @@
 import React, { useState } from 'react';
 import FormPage from './Form';
 
-const ModalPage: React.FC = () => {
+interface modalProps {
+  isOpen: boolean,
+  onClose: () => void
+}
+
+const ModalPage: React.FC<modalProps> = ({ isOpen, onClose }) => {
   const [tab, setTab] = useState(0);
 
   const changeTab = (value: number) => {
     setTab(value);
   }
+
   const tabItems = [
     { label: 'Login', index: 0, className: 'login-tab' },
     { label: 'Signup', index: 1, className: 'signup-tab' },
   ];
+
+  if (!isOpen) return null;
+
   return (
-    <div className="modal fade show" id="searchModal" tabIndex={-1} aria-labelledby="exampleModalLabel">
-      <div className="modal-dialog modal-dialog-centered d-flex justify-content-center">
+    <div className=" modal-backdrop-custom" id="searchModal" tabIndex={-1} aria-labelledby="exampleModalLabel">
+      <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content rounded-0 ">
           <div className="modal-header">
             <h5 className="modal-title text-primary py-3 text-center w-100" id="exampleModalLabel" style={{ paddingLeft: '2rem' }}>Login / Signup Form</h5>
             <button
               type="button"
               className="btn-close"
-              data-bs-dismiss="modal"
+              onClick={onClose}
               aria-label="Close"
             ></button>
           </div>

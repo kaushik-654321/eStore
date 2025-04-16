@@ -3,11 +3,12 @@ import generateToken from '../utils/generateToken.js';
 
 
 export const registeredUser = async (req, res) => {
+    console.log("+++++here");
     try {
-        const { name, email, mobile, password } = req.body;
+        const { name: fullName, email, mobile, password } = req.body;
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'user already exists' });
-        const user = await User.create({ name, email, mobile, password });
+        const user = await User.create({ fullName, email, mobile, password });
         if (user) {
             return res.status(201).json({ message: 'User registered successfully' });
         }

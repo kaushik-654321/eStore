@@ -4,9 +4,14 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "./app/store"
 
-const Navbar: React.FC = () => {
+type navProps = {
+  onUserIconClick: () => void
+}
+
+const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   const [expand, setExpand] = useState<boolean>(false);
   const cartCount = useSelector((state: RootState) => state.cart.items.length);
+
 
   const toggleNavbar = () => {
     setExpand(!expand)
@@ -83,9 +88,9 @@ const Navbar: React.FC = () => {
                 )}
 
               </a>
-              
-              <a href="#" data-bs-toggle="modal"
-                data-bs-target="#searchModal" className="my-auto">
+
+              <a href="#" onClick={onUserIconClick}
+                className="my-auto">
                 <i className="fas fa-user fa-2x"></i>
               </a>
 

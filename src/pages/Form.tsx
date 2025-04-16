@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from "axios";
 import { API_ENDPOINTS } from '../api/apiEndpoints';
+import { toast } from 'react-toastify';
 
 type PropTypes = {
     index: number; // 0 = Login, 1 = Signup
@@ -37,16 +38,26 @@ const FormPage: React.FC<PropTypes> = ({ index }) => {
     });
 
     const handleSubmit = async (values: formTypes, type: string) => {
-        const endpoint = type === 'login' ? "/login" : "register";
+        const endpoint = type === 'login' ? "/login" : "/signup";
         const payload = values;
-        const response = await axios.post(`${API_ENDPOINTS}${endpoint}`, payload);
-
-        if (type === 'login') {
-
-            console.log('Login Submitted', values);
+        try {
+            const { data, status } = await axios.post(`${API_ENDPOINTS.USER.api}${endpoint}`, payload);
+            console.log(data);
+            if (status === 200 || status === 201) {
+                toast.success(`${type === 'login' ? 'Login' : 'Signup'} successful`);
+            }
+            else {
+                toast.warn(`Unexpected status code: ${status}`);
+            }
         }
-        else {
-            console.log('Signup Submitted', values);
+        catch (error: any) {
+            if (error.response?.data.message) {
+                toast.error(`${type === 'login' ? 'Login' : 'Signup'} failed`);
+            }
+            else {
+                toast.error("Something went wrong!");
+            }
+            console.error(`${type === 'login' ? 'Login' : 'Signup'} failed`, error.response?.data || error.message);
         }
     }
 

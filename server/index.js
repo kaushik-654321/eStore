@@ -2,7 +2,6 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import apiRoutes from "./routes/apiRoutes.js"; 
 import fruitRoutes from "./routes/fruitRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -35,7 +34,7 @@ mongoose
 // Sample route
 app.use("/fruits", fruitRoutes);
 app.use("/category", categoryRoutes);
-app.use("/auth", userRoutes);
+app.use("/api", userRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
