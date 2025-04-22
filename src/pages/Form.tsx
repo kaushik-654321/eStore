@@ -4,9 +4,12 @@ import * as Yup from 'yup';
 import axios from "axios";
 import { API_ENDPOINTS } from '../api/apiEndpoints';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../features/userSlice';
 
 type PropTypes = {
     index: number; // 0 = Login, 1 = Signup
+    onClose: () => void;
 };
 
 type formTypes = {
@@ -17,7 +20,11 @@ type formTypes = {
     mobile?: string;
 }
 
-const FormPage: React.FC<PropTypes> = ({ index }) => {
+const FormPage: React.FC<PropTypes> = ({ index, onClose }) => {
+
+    const dispatch = useDispatch();
+
+
     const loginSchema = Yup.object({
         email: Yup.string().email('Invalid email address').required('Required Email'),
         password: Yup.string().min(6, 'Must be at least 6 characters').required('Required Password'),
@@ -29,7 +36,6 @@ const FormPage: React.FC<PropTypes> = ({ index }) => {
             'Please enter both first and last name',
             value => !!value && value.trim().split(' ').length >= 2
         ),
-        mobile: Yup.string().matches(/^[0-9]{10}$/, 'Mobile number must be 10 digits').required('Required Mobile number'),
         email: Yup.string().email('Invalid email address').required('Required Email'),
         password: Yup.string().min(6, 'Must be at least 6 characters').required('Required Password'),
         confirmPassword: Yup.string()
@@ -45,17 +51,26 @@ const FormPage: React.FC<PropTypes> = ({ index }) => {
             console.log(data);
             if (status === 200 || status === 201) {
                 toast.success(`${type === 'login' ? 'Login' : 'Signup'} successful`);
+                dispatch(setUser({ name: data.name, email: data.email }));
+                sessionStorage.setItem("user", JSON.stringify({
+                    name: data.name,
+                    email: data.email
+                }));
+                onClose();
             }
             else {
                 toast.warn(`Unexpected status code: ${status}`);
+                onClose();
             }
         }
         catch (error: any) {
             if (error.response?.data.message) {
                 toast.error(`${type === 'login' ? 'Login' : 'Signup'} failed`);
+                onClose();
             }
             else {
                 toast.error("Something went wrong!");
+                onClose();
             }
             console.error(`${type === 'login' ? 'Login' : 'Signup'} failed`, error.response?.data || error.message);
         }
@@ -73,7 +88,7 @@ const FormPage: React.FC<PropTypes> = ({ index }) => {
                         <Form noValidate>
                             <div className="second-section d-flex justify-content-center flex-column">
                                 <label htmlFor="email" className="form-field pb-1 text-primary">Email <span className="text-danger">*</span></label>
-                                <Field id="email" name="email" type="email" placeholder="Email Address" className={`${errors.email && touched.email ? 'mb-0' : 'mb-3'}`} />
+                                <Field id="email" name="email" type="email" placeholder="Email Address" className={`${errors.email && touched.email ? 'mb-0' : 'mb-2'}`} />
                                 <div className="text-start">
                                     <ErrorMessage name="email" component="small" className="text-danger" />
                                 </div>
@@ -83,7 +98,7 @@ const FormPage: React.FC<PropTypes> = ({ index }) => {
                                     <div className="text-start">
                                         <ErrorMessage name="password" component="small" className="text-danger" />
                                     </div>
-                                    <button type="button" className="forgot-password text-primary text-start mt-2">
+                                    <button type="button" className="forgot-password text-primary text-start mt-3">
                                         Forgot Password?
                                     </button>
                                 </div>
@@ -119,32 +134,28 @@ const FormPage: React.FC<PropTypes> = ({ index }) => {
                             <div className="second-section d-flex justify-content-center flex-column">
                                 <label htmlFor="name" className="form-field pb-1 text-primary">Full Name <span className="text-danger">*</span></label>
                                 <Field id="name" type="text" name="name" placeholder="Full Name" />
-                                <div className="text-start mb-3">
+                                <div className="text-start">
                                     <ErrorMessage name="name" component="small" className="text-danger" />
                                 </div>
-                                <label htmlFor="email" className="form-field pb-1 text-primary">Email <span className="text-danger">*</span></label>
+                                <label htmlFor="email" className="form-field pb-1 mt-1 text-primary">Email <span className="text-danger">*</span></label>
                                 <Field id="email" name="email" type="email" placeholder="Email Address" />
-                                <div className="text-start  mb-3">
+                                <div className="text-start">
                                     <ErrorMessage name="email" component="small" className="text-danger" />
                                 </div>
-                                <label htmlFor="mobile" className="form-field pb-1 text-primary">Mobile <span className="text-danger">*</span></label>
-                                <Field id="mobile" name="mobile" type="text" placeholder="Mobile Number" />
-                                <div className="text-start">
-                                    <ErrorMessage name="mobile" component="small" className="text-danger" />
-                                </div>
-                                <div className="password-wrapper d-flex justify-content-center flex-column mt-3">
-                                    <label htmlFor="password" className="form-field pb-1 text-primary">Password <span className="text-danger">*</span></label>
+
+                                <div className="password-wrapper d-flex justify-content-center flex-column">
+                                    <label htmlFor="password" className="form-field pb-1 mt-1 text-primary">Password <span className="text-danger">*</span></label>
                                     <Field id="password" name="password" type="password" placeholder="Password" />
                                     <div className="text-start">
                                         <ErrorMessage name="password" component="small" className="text-danger" />
                                     </div>
-                                    <label htmlFor="confirmPassword" className="form-field pb-1 text-primary">Confirm Password <span className="text-danger">*</span></label>
+                                    <label htmlFor="confirmPassword" className="form-field pb-1 mt-1 text-primary">Confirm Password <span className="text-danger">*</span></label>
                                     <Field
                                         id="confirmPassword"
                                         name="confirmPassword"
                                         type="password"
                                         placeholder="Confirm Password"
-                                        className="mt-1"
+
                                     />
                                     <div className="text-start">
                                         <ErrorMessage name="confirmPassword" component="small" className="text-danger" />
@@ -155,7 +166,7 @@ const FormPage: React.FC<PropTypes> = ({ index }) => {
                             <div className="third-section pb-3 d-flex justify-content-center flex-column">
                                 <button
                                     type="submit"
-                                    className="btn mt-5 mb-3 text-light d-flex bg-primary align-items-center justify-content-center"
+                                    className="btn mt-4 mb-1 text-light d-flex bg-primary align-items-center justify-content-center"
                                 >
                                     Sign Up
                                 </button>

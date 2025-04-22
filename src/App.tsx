@@ -31,7 +31,7 @@ const App: React.FC = () => {
 
         <Footer />
         <Copyright />
-        <ToastContainer position="top-right" autoClose={3000} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
+        <ToastContainer position="top-right" autoClose={1000} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
         <ModalPage isOpen={showModal} onClose={()=>setshowModal(false)}/>
       </Router>
 

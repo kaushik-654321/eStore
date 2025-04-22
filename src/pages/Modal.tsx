@@ -25,7 +25,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose }) => {
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content rounded-0 ">
           <div className="modal-header">
-            <h5 className="modal-title text-primary py-3 text-center w-100" id="exampleModalLabel" style={{ paddingLeft: '2rem' }}>Login / Signup Form</h5>
+            <h5 className="modal-title text-primary py-1 text-center w-100" id="exampleModalLabel" style={{ paddingLeft: '2rem' }}>Login / Signup Form</h5>
             <button
               type="button"
               className="btn-close"
@@ -36,7 +36,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose }) => {
           <div className="modal-body d-flex align-items-center justify-content-center">
             <div className="container-fluid">
               <div
-                className="container text-center rounded mt-2 d-flex justify-content-center align-items-center flex-column">
+                className="container text-center rounded mt-1 d-flex justify-content-center align-items-center flex-column">
                 <div className="first-section border border-primary d-flex justify-content-between align-items-center">
                   {tabItems.map(({ label, index, className }) => (
                     <div
@@ -53,7 +53,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose }) => {
                     </div>
                   ))}
                 </div>
-                <FormPage index={tab} />
+                <FormPage index={tab} onClose={onClose} />
               </div>
             </div>
           </div>

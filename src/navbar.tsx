@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Header from "./pages/Header";
 import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./app/store"
+import { clearUser, setUser } from "./features/userSlice";
 
 type navProps = {
   onUserIconClick: () => void
@@ -11,7 +12,38 @@ type navProps = {
 const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   const [expand, setExpand] = useState<boolean>(false);
   const cartCount = useSelector((state: RootState) => state.cart.items.length);
+  const [showProfile, setShowProfile] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const userName = useSelector((state: RootState) => state.user.name);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const savedUser = sessionStorage.getItem("user");
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      dispatch(setUser(user));
+    }
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setShowProfile(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [])
 
+
+  const toggleProfile = () => {
+    setShowProfile((prev) => !prev);
+  };
+
+  const handleLogout = () => {
+    // Clear auth logic here
+    console.log("Logout clicked");
+    dispatch(clearUser());
+    toggleProfile();
+  };
 
   const toggleNavbar = () => {
     setExpand(!expand)
@@ -21,6 +53,16 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
     setExpand(false)
   }
 
+  const handleClick = (e: any, userName: string) => {
+    e.preventDefault();
+    if (userName) {
+      toggleProfile();
+    }
+    else {
+      onUserIconClick();
+    }
+
+  }
 
   return (
     <div className="container-fluid fixed-top">
@@ -69,13 +111,13 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
               <a href="contact.html" className="nav-item nav-link text-start">Contact</a>
             </div>
             <div className="d-flex m-3 me-0">
-              <button
+              {/* <button
                 className="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
                 data-bs-toggle="modal"
                 data-bs-target="#searchModal"
               >
                 <i className="fas fa-search text-primary"></i>
-              </button>
+              </button> */}
               <a href="#" className="position-relative me-4 my-auto">
                 <i className="fa fa-shopping-bag fa-2x"></i>
                 {cartCount > 0 && (
@@ -89,12 +131,33 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
 
               </a>
 
-              <a href="#" onClick={onUserIconClick}
+              {/* <a href="#" onClick={onUserIconClick}
                 className="my-auto">
                 <i className="fas fa-user fa-2x"></i>
-              </a>
+              </a> */}
+              <div ref={profileRef} className="position-relative my-auto">
+                <a href="#" onClick={(e) => { handleClick(e, userName) }}>
+                  <i className="fas fa-user fa-2x"></i>
+                </a>
+
+                {showProfile && (
+                  <div
+                    className="position-absolute bg-white border rounded shadow-sm"
+                    style={{ top: "40px", right: "0", zIndex: 1000, minWidth: "150px" }}
+                  >
+                    <div className="p-2 border-bottom text-dark">{userName}</div>
+                    <button
+                      onClick={handleLogout}
+                      className="dropdown-item text-dark"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
 
             </div>
+
           </div>
         </nav>
       </div>

@@ -91,7 +91,7 @@
 .second-section {
     width: 100%;
     max-width: 300px;
-    padding-top: 3rem
+    padding-top: 1rem
 }
 
 input {
@@ -152,11 +152,13 @@ form {
     width:100%;
     max-width: 100%;
 }
+
 @media screen and (min-width:768px) {
     .modal-dialog{
         width:70%;
         max-width: 500px;
     }
+  
     .first-section {
         width: 100%;
         max-width: 400px;

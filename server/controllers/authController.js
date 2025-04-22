@@ -3,7 +3,6 @@ import generateToken from '../utils/generateToken.js';
 
 
 export const registeredUser = async (req, res) => {
-    console.log("+++++here");
     try {
         const { name: fullName, email, mobile, password } = req.body;
         const userExists = await User.findOne({ email });
@@ -21,12 +20,19 @@ export const registeredUser = async (req, res) => {
 
 export const loginusers = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, } = req.body;
         const user = await User.findOne({ email });
         if (!user || !(await user.matchPassword(password))) {
             return res.status(400).json({ message: 'Invalid email or password' })
         }
-        return res.status(200).json({ token: generateToken(user._id), userId: user.id, message: 'Login Successfull' })
+        const token = generateToken(user._id);
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Strict',
+            maxAge: 24 * 60 * 60 * 1000 //1day
+        })
+        return res.status(200).json({ name: user.fullName, email: user.email, userId: user.id, message: 'Login Successfull' })
 
     }
     catch (error) {

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { cartState, Items } from "../types/item.type";
 import { calculateCartTotal } from "../utils/utility";
 
