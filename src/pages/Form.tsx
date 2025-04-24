@@ -65,7 +65,7 @@ const FormPage: React.FC<PropTypes> = ({ index, onClose }) => {
         }
         catch (error: any) {
             if (error.response?.data.message) {
-                toast.error(`${type === 'login' ? 'Login' : 'Signup'} failed`);
+                toast.error(error.response?.data.message);
                 onClose();
             }
             else {

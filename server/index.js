@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import fruitRoutes from "./routes/fruitRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 
 dotenv.config();
 console.log("Mongo URI:", process.env.MONGO_URI);
@@ -14,16 +15,16 @@ const app = express();
 app.use(express.json());
 
 const allowedOrigins = [
-    "https://opulent-barnacle-qx7jjxjg7wvh9vp5-3000.app.github.dev", // Your frontend URL
-  ]
-  app.use(
-    cors({
-      origin: allowedOrigins,
-      methods: ["GET", "POST", "PUT", "DELETE"],
-      allowedHeaders: ["Content-Type", "Authorization"],
-      credentials: true, // Allow cookies if needed
-    })
-  );
+  "https://opulent-barnacle-qx7jjxjg7wvh9vp5-3000.app.github.dev", // Your frontend URL
+]
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // Allow cookies if needed
+  })
+);
 
 // Connect to MongoDB
 mongoose
@@ -35,6 +36,7 @@ mongoose
 app.use("/fruits", fruitRoutes);
 app.use("/category", categoryRoutes);
 app.use("/api", userRoutes);
+app.use("/api/cart", cartRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

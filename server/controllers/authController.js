@@ -9,7 +9,7 @@ export const registeredUser = async (req, res) => {
         if (userExists) return res.status(400).json({ message: 'user already exists' });
         const user = await User.create({ fullName, email, mobile, password });
         if (user) {
-            return res.status(201).json({ message: 'User registered successfully' });
+            return res.status(201).json({ name: user.fullName, email: user.email, userId: user.id, message: 'User registered successfully' });
         }
         else {
             return res.status(400).json({ message: 'Invalid user Data' })
@@ -23,7 +23,7 @@ export const loginusers = async (req, res) => {
         const { email, password, } = req.body;
         const user = await User.findOne({ email });
         if (!user || !(await user.matchPassword(password))) {
-            return res.status(400).json({ message: 'Invalid email or password' })
+            return res.status(400).json({ message: 'Invalid login credentials' })
         }
         const token = generateToken(user._id);
         res.cookie('token', token, {
