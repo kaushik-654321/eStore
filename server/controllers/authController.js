@@ -26,13 +26,14 @@ export const loginusers = async (req, res) => {
             return res.status(400).json({ message: 'Invalid login credentials' })
         }
         const token = generateToken(user._id);
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Strict',
-            maxAge: 24 * 60 * 60 * 1000 //1day
-        })
-        return res.status(200).json({ name: user.fullName, email: user.email, userId: user.id, message: 'Login Successfull' })
+        // res.cookie('token', token, {
+        //     httpOnly: false,
+        //     secure: false,
+        //     sameSite: 'None',
+        //     domain: '.app.github.dev',
+        //     maxAge: 24 * 60 * 60 * 1000 //1day
+        // })
+        return res.status(200).json({ token, name: user.fullName, email: user.email, userId: user.id, message: 'Login Successfull' })
 
     }
     catch (error) {

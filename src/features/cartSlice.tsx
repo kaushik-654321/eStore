@@ -1,33 +1,36 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { cartState, Items } from "../types/item.type";
 import { calculateCartTotal } from "../utils/utility";
-
-
-
-
-
+import axios from "axios";
+import { API_ENDPOINTS } from "../api/apiEndpoints";
 
 const initialState: Partial<cartState> = {
     items: [],
-    
+
 }
+const token = localStorage.getItem('token');
 
+// Fetch cart from server
+export const fetchUserCart = createAsyncThunk(
+    'cart/fetchUserCart',
+    async (userId: string) => {
+        const response = await axios.get(`${API_ENDPOINTS.CART.api}/${userId}`,{
+            headers:{
+                Authorization : `Bearer ${token}`
+            }
+        });
+        return response.data.items as Items[];
 
-// Thunks for server sync
-// export const fetchUserCart = createAsyncThunk(
-//     'cart/fetchUserCart',
-//     async(userId : string)=>{
-//         const res = a
+    }
+)
 
-//     }
-// )
-
-// export const syncCartToServer = createAsyncThunk(
-//     'cart/syncCartToServer',
-//     async(payload:{userId: string; items: cartItem[]} ){
-
-//     }
-// )
+export const addToCartServer = createAsyncThunk(
+    'cart/addToCartServer',
+    async (payload: { userId: string, item: Items }) => {
+        const response = await axios.post(`${API_ENDPOINTS.CART.api}/${payload.userId}`, payload.item);
+        return response.data.items as Items[];
+    }
+)
 
 const cartSlice = createSlice({
     name: "cart",
@@ -51,7 +54,7 @@ const cartSlice = createSlice({
         removeCart: (state, action: PayloadAction<{ _id: string }>) => {
             state.items = state.items.filter(item => item._id !== action.payload._id);
             state.cartTotal = calculateCartTotal(state.items);
-           
+
         },
         updateQuantity: (state, action: PayloadAction<{ _id: string; quantity: number }>) => {
             const item = state.items.find(item => item._id === action.payload._id);
@@ -59,7 +62,7 @@ const cartSlice = createSlice({
                 item.quantity = action.payload.quantity;
                 item.total = item.price * item.quantity;
             }
-            if(item && action.payload.quantity <1){
+            if (item && action.payload.quantity < 1) {
                 state.items = state.items.filter(item => item._id !== action.payload._id);
             }
             state.cartTotal = calculateCartTotal(state.items);
@@ -67,6 +70,16 @@ const cartSlice = createSlice({
         clearCart: (state) => {
             state.items = [];
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchUserCart.fulfilled, (state, action) => {
+            state.items = action.payload;
+            state.cartTotal = calculateCartTotal(state.items);
+        })
+        builder.addCase(addToCartServer.fulfilled, (state, action) => {
+            state.items = action.payload;
+            state.cartTotal = calculateCartTotal(state.items);
+        })
     }
 });
 export const { addToCart, removeCart, updateQuantity, clearCart } = cartSlice.actions;

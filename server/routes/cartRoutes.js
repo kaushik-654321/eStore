@@ -7,9 +7,9 @@ import {getCart, addToCart, updateCartItem, removeCartItem} from '../controllers
 
 const cartRoutes = express.Router();
 
-cartRoutes.get("/", protect, getCart);
-cartRoutes.post("/", protect, addToCart);
-cartRoutes.put("/:productId", protect, updateCartItem);
-cartRoutes.delete("/:productId", protect, removeCartItem);
+cartRoutes.get("/:userId", protect, getCart);
+cartRoutes.post("/:userId", protect, addToCart);
+cartRoutes.put("/:userId/:productId", protect, updateCartItem);
+cartRoutes.delete("/:userId/:productId", protect, removeCartItem);
 
 export default cartRoutes;

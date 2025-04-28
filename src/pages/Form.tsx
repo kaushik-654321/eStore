@@ -6,6 +6,8 @@ import { API_ENDPOINTS } from '../api/apiEndpoints';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../features/userSlice';
+import { fetchUserCart } from '../features/cartSlice';
+import { AppDispatch } from '../app/store';
 
 type PropTypes = {
     index: number; // 0 = Login, 1 = Signup
@@ -22,7 +24,7 @@ type formTypes = {
 
 const FormPage: React.FC<PropTypes> = ({ index, onClose }) => {
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
 
     const loginSchema = Yup.object({
@@ -51,11 +53,14 @@ const FormPage: React.FC<PropTypes> = ({ index, onClose }) => {
             console.log(data);
             if (status === 200 || status === 201) {
                 toast.success(`${type === 'login' ? 'Login' : 'Signup'} successful`);
-                dispatch(setUser({ name: data.name, email: data.email }));
+                dispatch(setUser({ name: data.name, email: data.email, userId: data.userId }));
+              
                 sessionStorage.setItem("user", JSON.stringify({
                     name: data.name,
-                    email: data.email
+                    email: data.email,
+                    userId: data.userId
                 }));
+                localStorage.setItem("token", data.token);
                 onClose();
             }
             else {

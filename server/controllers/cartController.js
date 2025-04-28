@@ -1,8 +1,10 @@
 import Cart from "../models/Cart.js";
 
 export const getCart = async (req, res) => {
-    const userId = req.user.id;
-    const cart = await cart.findOne({ userId }).populate("items.productId");
+
+    const {userId} = req.params;
+    console.log("+++userId", userId);
+    const cart = await Cart.findOne({ userId }).populate("items.productId");
 
     if (!cart) return res.status(200).json({ items: [] });
     res.json(cart);

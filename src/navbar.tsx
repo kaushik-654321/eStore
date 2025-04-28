@@ -41,6 +41,8 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   const handleLogout = () => {
     // Clear auth logic here
     console.log("Logout clicked");
+    sessionStorage.removeItem("user");
+    localStorage.removeItem("token");
     dispatch(clearUser());
     toggleProfile();
   };

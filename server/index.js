@@ -6,11 +6,12 @@ import fruitRoutes from "./routes/fruitRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 console.log("Mongo URI:", process.env.MONGO_URI);
 const app = express();
-
+app.use(cookieParser());
 // Middleware
 app.use(express.json());
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import { addToCart } from '../features/cartSlice';
-import { AppDispatch } from '../app/store';
-import { useDispatch } from 'react-redux';
+import { addToCart, fetchUserCart } from '../features/cartSlice';
+import { AppDispatch, RootState } from '../app/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { Items } from '../types/item.type';
 
 // Define Props Interface
@@ -11,11 +11,20 @@ interface FruitsComponentProps {
 
 const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits }) => {
     const dispatch = useDispatch<AppDispatch>();
+    const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
+    const userId = useSelector((state: RootState) => state.user.userId);
     const ItemaddTocart = (Itemdata: Items) => {
+        if (isAuthenticated) {
+            // dispatch(addToCartServer({userId, _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image}))
+        }
+        else {
+
+        }
         dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
+
     }
 
-  
+
 
     return (
         fruits?.map(fruit => (

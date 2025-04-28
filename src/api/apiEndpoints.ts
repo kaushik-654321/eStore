@@ -9,5 +9,8 @@ export const API_ENDPOINTS = {
     },
     USER: {
         api: `${API_BASE_URL}/api/auth`
+    },
+    CART:{
+        api: `${API_BASE_URL}/api/cart`
     }
 };
