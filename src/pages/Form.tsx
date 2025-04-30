@@ -54,6 +54,7 @@ const FormPage: React.FC<PropTypes> = ({ index, onClose }) => {
             if (status === 200 || status === 201) {
                 toast.success(`${type === 'login' ? 'Login' : 'Signup'} successful`);
                 dispatch(setUser({ name: data.name, email: data.email, userId: data.userId }));
+                dispatch(fetchUserCart(data.userId));
               
                 sessionStorage.setItem("user", JSON.stringify({
                     name: data.name,

@@ -3,17 +3,16 @@ import Cart from "../models/Cart.js";
 export const getCart = async (req, res) => {
 
     const {userId} = req.params;
-    console.log("+++userId", userId);
     const cart = await Cart.findOne({ userId }).populate("items.productId");
+    
 
     if (!cart) return res.status(200).json({ items: [] });
     res.json(cart);
 }
 
 export const addToCart = async (req, res) => {
-    const { productId, quantity } = req.body;
-    const userId = req.user.id;
-    let cart = await cart.findOne({ userId });
+    const { productId, quantity, userId } = req.body;
+    let cart = await Cart.findOne({ userId });
 
     if (!cart) {
         cart = new Cart({ userId, items: [{ productId, quantity }] });
@@ -28,14 +27,14 @@ export const addToCart = async (req, res) => {
         }
     }
     await cart.save();
-    res.status(200).json({ message: "cart updated", cart });
+    res.status(200).json({ message: "cart added", cart });
 }
 
 export const updateCartItem = async (req, res) => {
     const { productId } = req.params;
     const { quantity } = req.body;
     const userId = req.user.id;
-    let cart = await cart.findOne({ userId });
+    let cart = await Cart.findOne({ userId });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
     const item = cart.items.find(item => item.productId.equals(productId));
@@ -49,7 +48,7 @@ export const updateCartItem = async (req, res) => {
 export const removeCartItem = async(req,res)=>{
     const { productId } = req.params;
     const userId = req.user.id;
-    let cart = await cart.findOne({ userId });
+    let cart = await Cart.findOne({ userId });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
     cart.items = cart.items.filter(item=> !item.productId.equals(productId));
     await cart.save();

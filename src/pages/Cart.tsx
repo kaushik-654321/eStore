@@ -1,17 +1,29 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../app/store';
-import { addToCart, updateQuantity, removeCart } from '../features/cartSlice';
+import { AppDispatch, RootState } from '../app/store';
+import { addToCart, updateQuantity, removeCart, addToCartServer } from '../features/cartSlice';
 import { Items } from '../types/item.type';
 import { PageHeader } from './PageHeader';
 
 
 function CartPage() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const cartItems = useSelector((state: RootState) => state.cart.items);
+
+
+
+
     const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
+    const userInfo = useSelector((state: RootState) => state.user);
     const ItemaddTocart = (Itemdata: Items) => {
-        dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
+        if (userInfo?.isAuthenticated) {
+            let userId = userInfo?.userId;
+            dispatch(addToCartServer({ userId, productId: Itemdata._id, quantity: 1 }))
+        }
+        else {
+            dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
+        }
+
     }
 
     const itemupdatecart = (Itemdata: Items) => {
@@ -29,7 +41,7 @@ function CartPage() {
 
             <div className="container-fluid py-5">
                 <div className="container py-5">
-                   { cartTotal < 1 && <span>add some items</span> } 
+                    {cartTotal < 1 && <span>add some items</span>}
                     {cartTotal > 0 && (
                         <>
                             <div className="table-responsive">
@@ -49,7 +61,7 @@ function CartPage() {
                                             <tr>
                                                 <th scope="row">
                                                     <div className="d-flex align-items-center">
-                                                        <img src={cartData.image} className="img-fluid me-5 rounded-circle" style={{ width: "80px", height: "80px" }} alt="" />
+                                                        <img src={cartData.image} className="img-fluid rounded-circle" style={{ width: "80px", height: "80px" }} alt="" />
                                                     </div>
                                                 </th>
                                                 <td>

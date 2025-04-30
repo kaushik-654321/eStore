@@ -1,5 +1,5 @@
 import React from 'react';
-import { addToCart, fetchUserCart } from '../features/cartSlice';
+import { addToCart, addToCartServer, fetchUserCart } from '../features/cartSlice';
 import { AppDispatch, RootState } from '../app/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { Items } from '../types/item.type';
@@ -15,13 +15,12 @@ const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits })
     const userId = useSelector((state: RootState) => state.user.userId);
     const ItemaddTocart = (Itemdata: Items) => {
         if (isAuthenticated) {
-            // dispatch(addToCartServer({userId, _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image}))
+            dispatch(addToCartServer({ userId, productId: Itemdata._id, quantity: 1 }))
+            dispatch(fetchUserCart(userId));
         }
         else {
-
+            dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
         }
-        dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
-
     }
 
 
