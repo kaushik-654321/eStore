@@ -2,8 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import Header from "./pages/Header";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "./app/store"
+import { persistor, RootState } from "./app/store"
 import { clearUser, setUser } from "./features/userSlice";
+import { clearCart } from "./features/cartSlice";
 
 type navProps = {
   onUserIconClick: () => void
@@ -43,7 +44,9 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
     console.log("Logout clicked");
     sessionStorage.removeItem("user");
     localStorage.removeItem("token");
+    persistor.purge();
     dispatch(clearUser());
+    dispatch(clearCart());
     toggleProfile();
   };
 

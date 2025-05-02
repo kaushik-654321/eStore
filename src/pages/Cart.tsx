@@ -1,17 +1,19 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
 import { addToCart, updateQuantity, removeCart, addToCartServer } from '../features/cartSlice';
 import { Items } from '../types/item.type';
 import { PageHeader } from './PageHeader';
+import { NormalizeCartItem } from '../utils/cartNormalizer';
 
 
 function CartPage() {
     const dispatch = useDispatch<AppDispatch>();
     const cartItems = useSelector((state: RootState) => state.cart.items);
+    const user = useSelector((state: RootState) => state.user);
+    const normalizedCartItems = NormalizeCartItem(cartItems, user?.isAuthenticated);
 
-
-
+    console.log("normalizedCartItems", normalizedCartItems);
 
     const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
     const userInfo = useSelector((state: RootState) => state.user);
@@ -42,7 +44,7 @@ function CartPage() {
             <div className="container-fluid py-5">
                 <div className="container py-5">
                     {cartTotal < 1 && <span>add some items</span>}
-                    {cartTotal > 0 && (
+                    {normalizedCartItems && normalizedCartItems.length > 0 && (
                         <>
                             <div className="table-responsive">
                                 <table className="table">
@@ -57,7 +59,7 @@ function CartPage() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {cartItems?.map((cartData) => (
+                                        {normalizedCartItems.map((cartData) => (
                                             <tr>
                                                 <th scope="row">
                                                     <div className="d-flex align-items-center">
