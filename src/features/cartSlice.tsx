@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { cartState, Items } from "../types/item.type";
+import { cartState, Items, fetchUserCartPayload, addToCartPayload } from "../types/item.type";
 import { calculateCartTotal } from "../utils/utility";
 import axios from "axios";
 import { API_ENDPOINTS } from "../api/apiEndpoints";
@@ -8,34 +8,35 @@ const initialState: Partial<cartState> = {
     items: [],
 
 }
-const token = localStorage.getItem('token');
+
+
+
 
 // Fetch cart from server
-export const fetchUserCart = createAsyncThunk(
+export const fetchUserCart = createAsyncThunk<Items[], fetchUserCartPayload>(
     'cart/fetchUserCart',
-    async (userId: string) => {
+    async ({ userId, token }) => {
         const response = await axios.get(`${API_ENDPOINTS.CART.api}/${userId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
         return response.data.items as Items[];
-
     }
 )
 
-export const addToCartServer = createAsyncThunk(
+export const addToCartServer = createAsyncThunk<Items[], Partial<addToCartPayload>>(
     'cart/addToCartServer',
-    async (payload: { userId: string, productId: string, quantity: number }) => {
-        const token = localStorage.getItem('token');
-        const response = await axios.post(`${API_ENDPOINTS.CART.api}/${payload.userId}`, payload,
+    async ({ userId, token, cartItems }) => {
+        const response = await axios.post(`${API_ENDPOINTS.CART.api}/${userId}`, { userId, cartItems },
             {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             }
         );
-        return response.data.cart.items as Items[];
+        console.log("response", response);
+        return response.data.items as Items[];
     }
 )
 
@@ -53,7 +54,7 @@ const cartSlice = createSlice({
                 state.items.push({ ...action.payload, quantity: 1, total: action.payload.price })
             }
             state.cartTotal = calculateCartTotal(state.items);
-           
+
         },
         removeCart: (state, action: PayloadAction<{ _id: string }>) => {
             state.items = state.items.filter(item => item._id !== action.payload._id);

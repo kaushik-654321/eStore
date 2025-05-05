@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import Header from "./pages/Header";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { persistor, RootState } from "./app/store"
+import { AppDispatch, persistor, RootState } from "./app/store"
 import { clearUser, setUser } from "./features/userSlice";
-import { clearCart } from "./features/cartSlice";
+import { clearCart, fetchUserCart } from "./features/cartSlice";
 
 type navProps = {
   onUserIconClick: () => void
@@ -16,12 +16,14 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   const [showProfile, setShowProfile] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const userName = useSelector((state: RootState) => state.user.name);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     const savedUser = sessionStorage.getItem("user");
+    const token = sessionStorage.getItem("token");
     if (savedUser) {
       const user = JSON.parse(savedUser);
       dispatch(setUser(user));
+      dispatch(fetchUserCart({ userId : user.userId, token }))
     }
     const handleClickOutside = (event: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
@@ -43,7 +45,7 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
     // Clear auth logic here
     console.log("Logout clicked");
     sessionStorage.removeItem("user");
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     persistor.purge();
     dispatch(clearUser());
     dispatch(clearCart());
@@ -123,7 +125,17 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
               >
                 <i className="fas fa-search text-primary"></i>
               </button> */}
-              <a href="#" className="position-relative me-4 my-auto">
+              <NavLink to="/cart" className="position-relative me-4 my-auto"> <i className="fa fa-shopping-bag fa-2x"></i>
+                {cartCount > 0 && (
+                  <span
+                    className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
+                    style={{ top: "-5px", left: "15px", height: "20px", minWidth: "20px" }}
+                  >
+                    {cartCount}
+                  </span>
+                )}
+              </NavLink>
+              {/* <a href="#" >
                 <i className="fa fa-shopping-bag fa-2x"></i>
                 {cartCount > 0 && (
                   <span
@@ -134,7 +146,7 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
                   </span>
                 )}
 
-              </a>
+              </a> */}
 
               {/* <a href="#" onClick={onUserIconClick}
                 className="my-auto">

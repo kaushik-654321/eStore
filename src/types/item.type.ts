@@ -25,3 +25,17 @@ export interface cartState {
     isLoggedIn: false;
     cartTotal: number;
 }
+
+export interface fetchUserCartPayload{
+    userId: string;
+    token: string;
+}
+interface cartItemsInput{
+    _id: string;
+    quantity?: number
+}
+export interface addToCartPayload{
+    userId: string;
+    token: string;
+    cartItems: cartItemsInput[]
+}

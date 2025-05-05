@@ -4,10 +4,10 @@ import * as Yup from 'yup';
 import axios from "axios";
 import { API_ENDPOINTS } from '../api/apiEndpoints';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../features/userSlice';
-import { fetchUserCart } from '../features/cartSlice';
-import { AppDispatch } from '../app/store';
+import { addToCartServer, fetchUserCart } from '../features/cartSlice';
+import { AppDispatch, persistor, RootState } from '../app/store';
 
 type PropTypes = {
     index: number; // 0 = Login, 1 = Signup
@@ -23,9 +23,8 @@ type formTypes = {
 }
 
 const FormPage: React.FC<PropTypes> = ({ index, onClose }) => {
-
     const dispatch = useDispatch<AppDispatch>();
-
+    const prevCart = useSelector((state: RootState) => state.cart.items);
 
     const loginSchema = Yup.object({
         email: Yup.string().email('Invalid email address').required('Required Email'),
@@ -50,18 +49,25 @@ const FormPage: React.FC<PropTypes> = ({ index, onClose }) => {
         const payload = values;
         try {
             const { data, status } = await axios.post(`${API_ENDPOINTS.USER.api}${endpoint}`, payload);
-            console.log(data);
+            const { name, userId, email, token } = data;
             if (status === 200 || status === 201) {
                 toast.success(`${type === 'login' ? 'Login' : 'Signup'} successful`);
-                dispatch(setUser({ name: data.name, email: data.email, userId: data.userId }));
-                dispatch(fetchUserCart(data.userId));
-              
+                dispatch(setUser({ name, email, userId, token }));
+                if (prevCart && prevCart.length > 0) {
+                    dispatch(addToCartServer({ userId, token: data.token, cartItems: prevCart }));
+                    persistor.purge();
+                }
+                else{
+                    dispatch(fetchUserCart({ userId: data.userId, token: data.token }));
+                }
+               
+                
                 sessionStorage.setItem("user", JSON.stringify({
                     name: data.name,
                     email: data.email,
                     userId: data.userId
                 }));
-                localStorage.setItem("token", data.token);
+                sessionStorage.setItem("token", data.token);
                 onClose();
             }
             else {

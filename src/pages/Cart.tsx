@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
 import { addToCart, updateQuantity, removeCart, addToCartServer } from '../features/cartSlice';
@@ -17,10 +17,10 @@ function CartPage() {
 
     const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
     const userInfo = useSelector((state: RootState) => state.user);
+    const { isAuthenticated, token, userId } = userInfo;
     const ItemaddTocart = (Itemdata: Items) => {
-        if (userInfo?.isAuthenticated) {
-            let userId = userInfo?.userId;
-            dispatch(addToCartServer({ userId, productId: Itemdata._id, quantity: 1 }))
+        if (isAuthenticated) {
+            dispatch(addToCartServer({ userId, token, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }))
         }
         else {
             dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
