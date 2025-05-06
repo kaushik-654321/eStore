@@ -32,7 +32,7 @@ export interface fetchUserCartPayload{
 }
 interface cartItemsInput{
     _id: string;
-    quantity?: number
+    quantity?: number;
 }
 export interface addToCartPayload{
     userId: string;

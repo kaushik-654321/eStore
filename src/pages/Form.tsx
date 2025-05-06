@@ -62,12 +62,13 @@ const FormPage: React.FC<PropTypes> = ({ index, onClose }) => {
                 }
                
                 
-                sessionStorage.setItem("user", JSON.stringify({
-                    name: data.name,
-                    email: data.email,
-                    userId: data.userId
-                }));
-                sessionStorage.setItem("token", data.token);
+                // sessionStorage.setItem("user", JSON.stringify({
+                //     name: data.name,
+                //     email: data.email,
+                //     userId: data.userId,
+                //     token: data.token
+                // }));
+                // sessionStorage.setItem("token", data.token);
                 onClose();
             }
             else {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
-import { addToCart, updateQuantity, removeCart, addToCartServer } from '../features/cartSlice';
+import { addToCart, updateQuantity, removeCart, addToCartServer, updateCartServer } from '../features/cartSlice';
 import { Items } from '../types/item.type';
 import { PageHeader } from './PageHeader';
 import { NormalizeCartItem } from '../utils/cartNormalizer';
@@ -13,7 +13,7 @@ function CartPage() {
     const user = useSelector((state: RootState) => state.user);
     const normalizedCartItems = NormalizeCartItem(cartItems, user?.isAuthenticated);
 
-    console.log("normalizedCartItems", normalizedCartItems);
+    // console.log("normalizedCartItems", normalizedCartItems);
 
     const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
     const userInfo = useSelector((state: RootState) => state.user);
@@ -29,11 +29,19 @@ function CartPage() {
     }
 
     const itemupdatecart = (Itemdata: Items) => {
-        dispatch(updateQuantity({ _id: Itemdata._id, quantity: Itemdata.quantity - 1 }))
+        if (isAuthenticated) {
+            dispatch(updateCartServer({userId, token, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }))
+         }
+        else {
+            dispatch(updateQuantity({ _id: Itemdata._id, quantity: Itemdata.quantity - 1 }))
+        }
     }
 
     const itemremovecart = (Itemdata: Items) => {
-        dispatch(removeCart({ _id: Itemdata._id }))
+        if (isAuthenticated) { }
+        else {
+            dispatch(removeCart({ _id: Itemdata._id }))
+        }
     }
 
     return (

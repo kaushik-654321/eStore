@@ -15,15 +15,13 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   const cartCount = useSelector((state: RootState) => state.cart.items.length);
   const [showProfile, setShowProfile] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
-  const userName = useSelector((state: RootState) => state.user.name);
+  const savedUser = useSelector((state: RootState) => state.user);
+  const { name: userName, token, userId } = savedUser;
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    const savedUser = sessionStorage.getItem("user");
-    const token = sessionStorage.getItem("token");
-    if (savedUser) {
-      const user = JSON.parse(savedUser);
-      dispatch(setUser(user));
-      dispatch(fetchUserCart({ userId : user.userId, token }))
+    if (userId) {
+      dispatch(setUser(savedUser));
+      dispatch(fetchUserCart({ userId, token }))
     }
     const handleClickOutside = (event: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {

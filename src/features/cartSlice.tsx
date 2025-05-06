@@ -35,10 +35,25 @@ export const addToCartServer = createAsyncThunk<Items[], Partial<addToCartPayloa
                 }
             }
         );
-        console.log("response", response);
         return response.data.items as Items[];
     }
 )
+
+export const updateCartServer = createAsyncThunk<Items[], Partial<addToCartPayload>>(
+    'cart/updateCartServer',
+    async ({ userId, token, cartItems }) => {
+       
+        const response = await axios.put(`${API_ENDPOINTS.CART.api}/${userId}/${cartItems[0]._id}`, { userId, cartItems },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+        return response.data.items as Items[];
+    }
+)
+
 
 const cartSlice = createSlice({
     name: "cart",
@@ -82,6 +97,10 @@ const cartSlice = createSlice({
             state.cartTotal = calculateCartTotal(state.items);
         })
         builder.addCase(addToCartServer.fulfilled, (state, action) => {
+            state.items = action.payload;
+            state.cartTotal = calculateCartTotal(state.items);
+        })
+        builder.addCase(updateCartServer.fulfilled, (state, action)=>{
             state.items = action.payload;
             state.cartTotal = calculateCartTotal(state.items);
         })

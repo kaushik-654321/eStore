@@ -1,6 +1,7 @@
 import express from "express";
 import Fruit from "../models/Fruit.js";
 import Category from "../models/Category.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.get("/", async (req, res) => {
     }
 
     if (categoryId) {
-      searchQuery.category = categoryId;
+      searchQuery.category = new mongoose.Types.ObjectId(categoryId);
     }
     if (maxPrice > 0) {
       searchQuery.price = { $gte: 0, $lte: maxPrice }
@@ -49,7 +50,6 @@ router.get("/", async (req, res) => {
     aggregationPipeline.push({ $skip: (page - 1) * limit });
 
     aggregationPipeline.push({ $limit: limit });
-
 
     const fruits = await Fruit.aggregate(aggregationPipeline);
 

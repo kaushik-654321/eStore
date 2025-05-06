@@ -11,11 +11,12 @@ interface FruitsComponentProps {
 
 const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits }) => {
     const dispatch = useDispatch<AppDispatch>();
-    const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
-    const userId = useSelector((state: RootState) => state.user.userId);
+
+    const userObj = useSelector((state: RootState) => state.user);
+    const { userId, token } = userObj
     const ItemaddTocart = (Itemdata: Items) => {
-        if (isAuthenticated) {
-            // dispatch(addToCartServer({ userId, productId: Itemdata._id, quantity: 1 }))
+        if (userId) {
+            dispatch(addToCartServer({ userId, token, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }));
             // dispatch(fetchUserCart(userId));
         }
         else {

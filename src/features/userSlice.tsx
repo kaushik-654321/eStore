@@ -8,13 +8,13 @@ interface userState {
     token: string;
 }
 
-const initialState: userState = {
-    name: "",
-    email: "",
+const userSession = sessionStorage.getItem('user');
+const initialState: userState = userSession ? JSON.parse(userSession) : {
+    name: null,
+    email: null,
     isAuthenticated: false,
-    userId: "",
-    token: "",
-
+    userId: null,
+    token: null
 }
 
 const userSlice = createSlice({
@@ -27,6 +27,7 @@ const userSlice = createSlice({
             state.userId = action.payload.userId;
             state.isAuthenticated = true;
             state.token = action.payload.token;
+            sessionStorage.setItem('user', JSON.stringify(state));
         },
         clearUser: (state) => {
             state.name = "";
@@ -34,6 +35,7 @@ const userSlice = createSlice({
             state.isAuthenticated = false;
             state.userId = "";
             state.token = "";
+            sessionStorage.removeItem('token');
         }
     }
 })

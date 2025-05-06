@@ -50,10 +50,11 @@ export const addToCart = async (req, res) => {
 };
 
 export const updateCartItem = async (req, res) => {
-  const { productId, quantity } = req.body;
+  const { cartItems, userId } = req.body;
+  const {_id:productId, quantity} = cartItems[0];
 
   try {
-    const cart = await Cart.findOne({ user: req.user._id });
+    const cart = await Cart.findOne({ user: userId });
 
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
