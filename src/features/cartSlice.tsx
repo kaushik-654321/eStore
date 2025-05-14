@@ -3,6 +3,7 @@ import { cartState, Items, fetchUserCartPayload, addToCartPayload } from "../typ
 import { calculateCartTotal } from "../utils/utility";
 import axios from "axios";
 import { API_ENDPOINTS } from "../api/apiEndpoints";
+import axiosInstance from "../api/axiosInstance";
 
 const initialState: Partial<cartState> = {
     items: [],
@@ -16,40 +17,46 @@ const initialState: Partial<cartState> = {
 export const fetchUserCart = createAsyncThunk<Items[], fetchUserCartPayload>(
     'cart/fetchUserCart',
     async ({ userId, token }) => {
-        const response = await axios.get(`${API_ENDPOINTS.CART.api}/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const response = await axiosInstance.get(`${API_ENDPOINTS.CART.api}/${userId}`);
         return response.data.items as Items[];
     }
 )
 
 export const addToCartServer = createAsyncThunk<Items[], Partial<addToCartPayload>>(
     'cart/addToCartServer',
-    async ({ userId, token, cartItems }) => {
-        const response = await axios.post(`${API_ENDPOINTS.CART.api}/${userId}`, { userId, cartItems },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        );
+    async ({ userId, cartItems }) => {
+        const response = await axiosInstance.post(`${API_ENDPOINTS.CART.api}/${userId}`,
+            { userId, cartItems });
         return response.data.items as Items[];
     }
 )
 
 export const updateCartServer = createAsyncThunk<Items[], Partial<addToCartPayload>>(
     'cart/updateCartServer',
-    async ({ userId, token, cartItems }) => {
-       
-        const response = await axios.put(`${API_ENDPOINTS.CART.api}/${userId}/${cartItems[0]._id}`, { userId, cartItems },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
+    async ({ userId, cartItems }) => {
+
+        const response = await axiosInstance.put(`${API_ENDPOINTS.CART.api}/${userId}/${cartItems[0]._id}`,
+            { userId, cartItems },
         );
+        if (!response.data || !response.data.items) {
+            return [];
+        }
+        return response.data.items as Items[];
+    }
+)
+
+export const removeCartServer = createAsyncThunk<Items[], Partial<addToCartPayload>>(
+    'cart/removeCartServer',
+    async ({ userId, cartItems }) => {
+        const productId = cartItems?.[0]?._id;
+
+        if (!userId || !productId) {
+            throw new Error("Invalid input for removeCartServer");
+        }
+        const response = await axiosInstance.delete(`${API_ENDPOINTS.CART.api}/${userId}/${productId}`);
+        if (!response.data || !response.data.items) {
+            return [];
+        }
         return response.data.items as Items[];
     }
 )
@@ -100,7 +107,11 @@ const cartSlice = createSlice({
             state.items = action.payload;
             state.cartTotal = calculateCartTotal(state.items);
         })
-        builder.addCase(updateCartServer.fulfilled, (state, action)=>{
+        builder.addCase(updateCartServer.fulfilled, (state, action) => {
+            state.items = action.payload;
+            state.cartTotal = calculateCartTotal(state.items);
+        })
+        builder.addCase(removeCartServer.fulfilled, (state, action) => {
             state.items = action.payload;
             state.cartTotal = calculateCartTotal(state.items);
         })

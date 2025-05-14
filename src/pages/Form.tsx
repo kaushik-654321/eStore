@@ -54,7 +54,7 @@ const FormPage: React.FC<PropTypes> = ({ index, onClose }) => {
                 toast.success(`${type === 'login' ? 'Login' : 'Signup'} successful`);
                 dispatch(setUser({ name, email, userId, token }));
                 if (prevCart && prevCart.length > 0) {
-                    dispatch(addToCartServer({ userId, token: data.token, cartItems: prevCart }));
+                    dispatch(addToCartServer({ userId, cartItems: prevCart }));
                     persistor.purge();
                 }
                 else{

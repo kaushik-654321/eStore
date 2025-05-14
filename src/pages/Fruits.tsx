@@ -16,7 +16,7 @@ const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits })
     const { userId, token } = userObj
     const ItemaddTocart = (Itemdata: Items) => {
         if (userId) {
-            dispatch(addToCartServer({ userId, token, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }));
+            dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }));
             // dispatch(fetchUserCart(userId));
         }
         else {

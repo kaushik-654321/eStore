@@ -51,7 +51,7 @@ export const addToCart = async (req, res) => {
 
 export const updateCartItem = async (req, res) => {
   const { cartItems, userId } = req.body;
-  const {_id:productId, quantity} = cartItems[0];
+  const { _id: productId, quantity } = cartItems[0];
 
   try {
     const cart = await Cart.findOne({ user: userId });
@@ -61,8 +61,21 @@ export const updateCartItem = async (req, res) => {
     const item = cart.items.find(item => item.product.toString() === productId);
 
     if (!item) return res.status(404).json({ message: "Item not found in cart" });
+    // Decrease quantity
+    item.quantity -= quantity;
 
-    item.quantity = quantity;
+    // Remove item if quantity is 0 or less
+    if (item.quantity <= 0) {
+      cart.items.pull(item._id)
+    }
+
+    // If no items left, delete the cart
+    if (cart.items.length === 0) {
+      await cart.deleteOne({ _id: cart._id });
+      return res.status(200).json({ message: "Cart is now empty and has been deleted" })
+    }
+
+
     await cart.save();
 
     const populatedCart = await cart.populate("items.product");
@@ -73,14 +86,24 @@ export const updateCartItem = async (req, res) => {
 };
 
 export const removeCartItem = async (req, res) => {
-  const { productId } = req.body;
+  const { productId, userId } = req.params;
+
+
 
   try {
-    const cart = await Cart.findOne({ user: req.user._id });
+    const cart = await Cart.findOne({ user: userId });
 
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
-    cart.items = cart.items.filter(item => item.product.toString() !== productId);
+    const item = cart.items.find(item => item.product.toString() === productId);
+    if (!item) return res.status(404).json({ message: "Item not found in cart" });
+    cart.items.pull(item._id);
+
+    // If no items left, delete the cart
+    if (cart.items.length === 0) {
+      await cart.deleteOne({ _id: cart._id });
+      return res.status(200).json({ message: "Cart is now empty and has been deleted" })
+    }
     await cart.save();
 
     const populatedCart = await cart.populate("items.product");
