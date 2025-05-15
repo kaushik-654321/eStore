@@ -11,9 +11,8 @@ interface FruitsComponentProps {
 
 const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits }) => {
     const dispatch = useDispatch<AppDispatch>();
-
     const userObj = useSelector((state: RootState) => state.user);
-    const { userId, token } = userObj
+    const { userId } = userObj
     const ItemaddTocart = (Itemdata: Items) => {
         if (userId) {
             dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }));

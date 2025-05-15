@@ -24,18 +24,33 @@ export interface cartState {
     items: Items[];
     isLoggedIn: false;
     cartTotal: number;
+    cartCount: number
 }
 
-export interface fetchUserCartPayload{
+export interface fetchUserCartPayload {
     userId: string;
     token: string;
 }
-interface cartItemsInput{
+interface cartItemsInput {
     _id: string;
     quantity?: number;
 }
-export interface addToCartPayload{
+export interface addToCartPayload {
     userId: string;
     token: string;
     cartItems: cartItemsInput[]
+}
+
+export interface tabDataType {
+    _id: string;
+    name: string
+}
+
+export interface tabContentData {
+    _id: string,
+    name: string,
+    category: string,
+    image: string,
+    description: string,
+    price: number
 }

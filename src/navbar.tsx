@@ -12,7 +12,7 @@ type navProps = {
 
 const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   const [expand, setExpand] = useState<boolean>(false);
-  const cartCount = useSelector((state: RootState) => state.cart.items.length);
+  const cartCount = useSelector((state: RootState) => state.cart?.cartCount);
   const [showProfile, setShowProfile] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const savedUser = useSelector((state: RootState) => state.user);

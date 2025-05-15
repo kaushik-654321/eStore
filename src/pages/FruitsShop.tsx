@@ -2,19 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { fetchData } from '../services/api';
 import { API_ENDPOINTS } from '../api/apiEndpoints';
 import InfiniteScroll from "react-infinite-scroll-component";
-type tabDataType = {
-    "_id": string,
-    "name": string,
-}
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../app/store';
+import { Items, tabContentData, tabDataType } from '../types/item.type';
+import { addToCart, addToCartServer } from '../features/cartSlice';
 
-type tabContentData = {
-    "_id": string,
-    "name": string,
-    "category": string,
-    "image": string,
-    "description": string,
-    "price": string,
-}
 
 const FruitsShop: React.FC = () => {
     const [tabData, setTabData] = useState<tabDataType[]>([]);
@@ -24,6 +16,11 @@ const FruitsShop: React.FC = () => {
     const [visibleItems, setVisibleItems] = useState<tabContentData[]>([]);
     const [page, setPage] = useState<number>(1);
     const itemsPerPage = 8;
+    const dispatch = useDispatch<AppDispatch>();
+    const userObj = useSelector((state: RootState) => state.user);
+    const { userId } = userObj;
+
+
     useEffect(() => {
         fetchData({ API_URL: API_ENDPOINTS.CATEGORIES.api }).then((result) => {
             if (result.error) {
@@ -66,8 +63,18 @@ const FruitsShop: React.FC = () => {
         }
         setTab(SelectedTab);
         setPage(1);
-        
+
     }
+
+    const ItemaddTocart = (Itemdata: Items) => {
+        if (userId) {
+            dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }));
+         }
+        else {
+            dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
+        }
+    }
+
     return (
         <div className="container-fluid fruite py-5">
             <div className="container py-5">
@@ -116,7 +123,9 @@ const FruitsShop: React.FC = () => {
                                                             <p>{data.description}</p>
                                                             <div className="d-flex justify-content-between flex-lg-wrap">
                                                                 <p className="text-dark fs-5 fw-bold mb-0"> {`$${data.price} / kg`}</p>
-                                                                <a href="#" className="btn border border-secondary rounded-pill px-3 text-primary"><i className="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                                <button className="btn border border-secondary rounded-pill px-3 text-primary" onClick={() => ItemaddTocart(data)}>
+                                                                    <i className="fa fa-shopping-bag me-2 text-primary"></i>  Add to cart
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>

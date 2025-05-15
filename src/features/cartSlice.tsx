@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { cartState, Items, fetchUserCartPayload, addToCartPayload } from "../types/item.type";
-import { calculateCartTotal } from "../utils/utility";
+import { caclulateCartCount, calculateCartTotal } from "../utils/utility";
 import axios from "axios";
 import { API_ENDPOINTS } from "../api/apiEndpoints";
 import axiosInstance from "../api/axiosInstance";
@@ -76,12 +76,14 @@ const cartSlice = createSlice({
                 state.items.push({ ...action.payload, quantity: 1, total: action.payload.price })
             }
             state.cartTotal = calculateCartTotal(state.items);
+            state.cartCount = caclulateCartCount(state.items);
+            
 
         },
         removeCart: (state, action: PayloadAction<{ _id: string }>) => {
             state.items = state.items.filter(item => item._id !== action.payload._id);
             state.cartTotal = calculateCartTotal(state.items);
-
+            state.cartCount = caclulateCartCount(state.items);
         },
         updateQuantity: (state, action: PayloadAction<{ _id: string; quantity: number }>) => {
             const item = state.items.find(item => item._id === action.payload._id);
@@ -93,6 +95,7 @@ const cartSlice = createSlice({
                 state.items = state.items.filter(item => item._id !== action.payload._id);
             }
             state.cartTotal = calculateCartTotal(state.items);
+            state.cartCount = caclulateCartCount(state.items);
         },
         clearCart: (state) => {
             state.items = [];
@@ -102,18 +105,22 @@ const cartSlice = createSlice({
         builder.addCase(fetchUserCart.fulfilled, (state, action) => {
             state.items = action.payload;
             state.cartTotal = calculateCartTotal(state.items);
+            state.cartCount = caclulateCartCount(state.items);
         })
         builder.addCase(addToCartServer.fulfilled, (state, action) => {
             state.items = action.payload;
             state.cartTotal = calculateCartTotal(state.items);
+            state.cartCount = caclulateCartCount(state.items);
         })
         builder.addCase(updateCartServer.fulfilled, (state, action) => {
             state.items = action.payload;
             state.cartTotal = calculateCartTotal(state.items);
+            state.cartCount = caclulateCartCount(state.items);
         })
         builder.addCase(removeCartServer.fulfilled, (state, action) => {
             state.items = action.payload;
             state.cartTotal = calculateCartTotal(state.items);
+            state.cartCount = caclulateCartCount(state.items);
         })
     }
 });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
 import { addToCart, updateQuantity, removeCart, addToCartServer, updateCartServer, removeCartServer } from '../features/cartSlice';
@@ -12,12 +12,23 @@ function CartPage() {
     const cartItems = useSelector((state: RootState) => state.cart.items);
     const user = useSelector((state: RootState) => state.user);
     const normalizedCartItems = NormalizeCartItem(cartItems, user?.isAuthenticated);
-
+    const cartTableRef = useRef(null);
     // console.log("normalizedCartItems", normalizedCartItems);
 
     const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
     const userInfo = useSelector((state: RootState) => state.user);
-    const { isAuthenticated, token, userId } = userInfo;
+    const { isAuthenticated, userId } = userInfo;
+
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    cartTableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    cartTableRef.current?.focus();
+  }, 0); // Delay to ensure layout is complete
+
+  return () => clearTimeout(timer);
+}, []);
+
+
     const ItemaddTocart = (Itemdata: Items) => {
         if (isAuthenticated) {
             dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }))
@@ -46,6 +57,9 @@ function CartPage() {
         }
     }
 
+
+
+
     return (
         <>
 
@@ -56,7 +70,7 @@ function CartPage() {
                     {cartTotal < 1 && <span>add some items</span>}
                     {normalizedCartItems && normalizedCartItems.length > 0 && (
                         <>
-                            <div className="table-responsive">
+                            <div className="table-responsive" ref={cartTableRef} tabIndex={-1}>
                                 <table className="table">
                                     <thead>
                                         <tr>
