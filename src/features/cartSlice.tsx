@@ -99,6 +99,8 @@ const cartSlice = createSlice({
         },
         clearCart: (state) => {
             state.items = [];
+            state.cartTotal = null;
+            state.cartCount = null;
         }
     },
     extraReducers: (builder) => {

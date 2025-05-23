@@ -2,9 +2,13 @@ import React from 'react';
 import { PageHeader } from './PageHeader';
 import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
+import { NormalizeCartItem } from '../utils/cartNormalizer';
+import { Items } from '../types/item.type';
 
 export const CheckoutPage = () => {
     const cartItems = useSelector((state: RootState) => state.cart.items);
+    const normalizedCartItems : Items[] = NormalizeCartItem(cartItems);
+    console.log(normalizedCartItems);
     const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
     return (
         <>
@@ -86,7 +90,7 @@ export const CheckoutPage = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {cartItems?.map((cartData) => (
+                                            {normalizedCartItems?.map((cartData) => (
                                                 <tr>
                                                     <th scope="row">
                                                         <div className="d-flex align-items-center mt-2">

@@ -1,7 +1,10 @@
-export const NormalizeCartItem = (cartItems: any, isAuthenticate: boolean) => {
-    return cartItems.map((item: any) => {
+import { Items } from "../types/item.type";
+
+export const NormalizeCartItem = (cartItems: Items[]) => {
+    console.log(cartItems)
+    return cartItems?.map((item: Partial<Items>) => {
         // console.log(item);
-       const product = item.product || item;
+       const product = item?.product || item;
         return {
             _id: product._id,
             name: product.name,

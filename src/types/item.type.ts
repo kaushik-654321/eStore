@@ -12,7 +12,7 @@ export interface Items {
         "name": string
     },
     "cartTotal"?: number,
-    "productId"?: {
+    "product"?: {
         "_id": string;
         "name": string;
         "image": string;

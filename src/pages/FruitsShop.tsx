@@ -72,6 +72,7 @@ const FruitsShop: React.FC = () => {
          }
         else {
             dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
+            localStorage.setItem('guest_cart_saved_at', Date.now().toString());
         }
     }
 

@@ -8,7 +8,7 @@ import { persistReducer, persistStore } from "redux-persist";
 const cartPersistConfig = {
     key: 'cart',
     storage,
-    whitelist: ['items', 'cartTotal']
+    whitelist: ['items', 'cartTotal', 'cartCount'],
 
 }
 
