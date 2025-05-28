@@ -3,6 +3,8 @@ import { addToCart, addToCartServer, fetchUserCart } from '../features/cartSlice
 import { AppDispatch, RootState } from '../app/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { Items } from '../types/item.type';
+import { updateActivity } from '../utils/updateActivity';
+
 
 // Define Props Interface
 interface FruitsComponentProps {
@@ -20,7 +22,7 @@ const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits })
         }
         else {
             dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
-            localStorage.setItem('guest_cart_saved_at', Date.now().toString());
+            updateActivity();
         }
     }
 

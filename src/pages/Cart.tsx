@@ -5,12 +5,14 @@ import { addToCart, updateQuantity, removeCart, addToCartServer, updateCartServe
 import { Items } from '../types/item.type';
 import { PageHeader } from './PageHeader';
 import { NormalizeCartItem } from '../utils/cartNormalizer';
+import { updateActivity } from '../utils/updateActivity';
+
 
 
 function CartPage() {
     const dispatch = useDispatch<AppDispatch>();
     const cartItems = useSelector((state: RootState) => state.cart.items);
-    const normalizedCartItems : Items[] = NormalizeCartItem(cartItems);
+    const normalizedCartItems: Items[] = NormalizeCartItem(cartItems);
     const cartTableRef = useRef(null);
     // console.log("normalizedCartItems", normalizedCartItems);
 
@@ -18,14 +20,14 @@ function CartPage() {
     const userInfo = useSelector((state: RootState) => state.user);
     const { isAuthenticated, userId } = userInfo;
 
-  useEffect(() => {
-  const timer = setTimeout(() => {
-    cartTableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    cartTableRef.current?.focus();
-  }, 0); // Delay to ensure layout is complete
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            cartTableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            cartTableRef.current?.focus();
+        }, 0); // Delay to ensure layout is complete
 
-  return () => clearTimeout(timer);
-}, []);
+        return () => clearTimeout(timer);
+    }, []);
 
 
     const ItemaddTocart = (Itemdata: Items) => {
@@ -34,7 +36,7 @@ function CartPage() {
         }
         else {
             dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
-            localStorage.setItem('guest_cart_saved_at', Date.now().toString());
+            updateActivity();
         }
 
     }
@@ -45,6 +47,7 @@ function CartPage() {
         }
         else {
             dispatch(updateQuantity({ _id: Itemdata._id, quantity: Itemdata.quantity - 1 }))
+            updateActivity();
         }
     }
 
@@ -54,6 +57,7 @@ function CartPage() {
         }
         else {
             dispatch(removeCart({ _id: Itemdata._id }))
+            updateActivity();
         }
     }
 
@@ -94,7 +98,7 @@ function CartPage() {
                                                     <p className="mb-0 mt-4">{cartData.name} </p>
                                                 </td>
                                                 <td>
-                                                    <p className="mb-0 mt-4">$ {cartData.price}</p>
+                                                    <p className="mb-0 mt-4">$ {(Number(cartData.price))}</p>
                                                 </td>
                                                 <td>
                                                     <div className="input-group quantity mt-4" style={{ width: "100px" }}>

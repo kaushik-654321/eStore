@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
 import { Items, tabContentData, tabDataType } from '../types/item.type';
 import { addToCart, addToCartServer } from '../features/cartSlice';
+import { updateActivity } from '../utils/updateActivity';
 
 
 const FruitsShop: React.FC = () => {
@@ -72,7 +73,7 @@ const FruitsShop: React.FC = () => {
          }
         else {
             dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
-            localStorage.setItem('guest_cart_saved_at', Date.now().toString());
+            updateActivity();
         }
     }
 

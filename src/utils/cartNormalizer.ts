@@ -9,7 +9,7 @@ export const NormalizeCartItem = (cartItems: Items[]) => {
             _id: product._id,
             name: product.name,
             image: product.image,
-            price: product.price,
+            price: Number(product.price),
             quantity: item.quantity,
             total: product.price * item.quantity,
         }

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, persistor, RootState } from "./app/store"
 import { clearUser, setUser } from "./features/userSlice";
 import { clearCart, fetchUserCart } from "./features/cartSlice";
+import { checkActivity } from "./utils/updateActivity";
 
 type navProps = {
   onUserIconClick: () => void
@@ -28,6 +29,7 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
         setShowProfile(false);
       }
     };
+    checkActivity();
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
