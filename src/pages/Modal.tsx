@@ -3,10 +3,11 @@ import FormPage from './Form';
 
 interface modalProps {
   isOpen: boolean,
-  onClose: () => void
+  onClose: () => void,
+  isCoupon?: boolean;
 }
 
-const ModalPage: React.FC<modalProps> = ({ isOpen, onClose }) => {
+const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon }) => {
   const [tab, setTab] = useState(0);
 
   const changeTab = (value: number) => {
@@ -25,7 +26,8 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose }) => {
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content rounded-0 ">
           <div className="modal-header">
-            <h5 className="modal-title text-primary py-1 text-center w-100" id="exampleModalLabel" style={{ paddingLeft: '2rem' }}>Login / Signup Form</h5>
+
+            <h5 className="modal-title text-primary py-1 text-center w-100" id="exampleModalLabel" style={{ paddingLeft: '2rem' }}>{isCoupon ? 'Coupon List' : 'Login / Signup Form'}</h5>
             <button
               type="button"
               className="btn-close"
@@ -37,23 +39,28 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose }) => {
             <div className="container-fluid">
               <div
                 className="container text-center rounded mt-1 d-flex justify-content-center align-items-center flex-column">
-                <div className="first-section border border-primary d-flex justify-content-between align-items-center">
-                  {tabItems.map(({ label, index, className }) => (
-                    <div
-                      key={label}
-                      role="button"
-                      tabIndex={0}
-                      className={`${className} ${tab === index ? 'active' : ''}`}
-                      onClick={() => changeTab(index)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') changeTab(index);
-                      }}
-                    >
-                      {label}
+                {isCoupon ? <>ass</> : (
+                  <>
+                    <div className="first-section border border-primary d-flex justify-content-between align-items-center">
+                      {tabItems.map(({ label, index, className }) => (
+                        <div
+                          key={label}
+                          role="button"
+                          tabIndex={0}
+                          className={`${className} ${tab === index ? 'active' : ''}`}
+                          onClick={() => changeTab(index)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') changeTab(index);
+                          }}
+                        >
+                          {label}
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-                <FormPage index={tab} onClose={onClose} />
+                    <FormPage index={tab} onClose={onClose} />
+                  </>
+                )}
+
               </div>
             </div>
           </div>

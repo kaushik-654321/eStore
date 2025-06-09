@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
 import { addToCart, updateQuantity, removeCart, addToCartServer, updateCartServer, removeCartServer } from '../features/cartSlice';
@@ -6,10 +6,12 @@ import { Items } from '../types/item.type';
 import { PageHeader } from './PageHeader';
 import { NormalizeCartItem } from '../utils/cartNormalizer';
 import { updateActivity } from '../utils/updateActivity';
+import ModalPage from './Modal';
+import { withModal } from '../components/HOC/withModal';
 
-
-
+const CouponModal = withModal(ModalPage);
 function CartPage() {
+    const [showModal, setshowModal] = useState<boolean>(false);
     const dispatch = useDispatch<AppDispatch>();
     const cartItems = useSelector((state: RootState) => state.cart.items);
     const normalizedCartItems: Items[] = NormalizeCartItem(cartItems);
@@ -61,7 +63,9 @@ function CartPage() {
         }
     }
 
-
+    const handleModal = () => {
+        setshowModal(true);
+    }
 
 
     return (
@@ -131,8 +135,9 @@ function CartPage() {
                             </div>
                             <div className="mt-5 text-start d-flex align-items-center">
                                 <input type="text" className="border-0 border-bottom rounded py-3 mb-4" placeholder="Coupon Code" />
-                                <button className="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Apply Coupon</button>
+                                <button className="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button" onClick={handleModal}>Apply Coupon</button>
                             </div>
+                            <CouponModal isOpen={showModal} onClose={()=>setshowModal(false)} isCoupon={true}/>
                             <div className="row g-4 justify-content-end">
                                 <div className="col-8"></div>
                                 <div className="col-sm-8 col-md-7 col-lg-6 col-xl-4">

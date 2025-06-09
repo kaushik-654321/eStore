@@ -12,7 +12,9 @@ import CartPage from './pages/Cart';
 import { CheckoutPage } from './pages/Checkout';
 import { ToastContainer } from 'react-toastify';
 import ModalPage from "./pages/Modal";
+import { withModal } from './components/HOC/withModal';
 
+const UserModal = withModal(ModalPage);
 const App: React.FC = () => {
   const [showModal, setshowModal] = useState<boolean>(false);
   return (
@@ -32,7 +34,7 @@ const App: React.FC = () => {
         <Footer />
         <Copyright />
         <ToastContainer position="top-right" autoClose={1000} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
-        <ModalPage isOpen={showModal} onClose={()=>setshowModal(false)}/>
+        <UserModal isOpen={showModal} onClose={()=>setshowModal(false)}/>
       </Router>
 
     </div>

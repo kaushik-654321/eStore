@@ -5,7 +5,6 @@ const FeaturesSection: React.FC = () => {
   
   return (
     <>
-    <ModalPage/>
     <div className="container-fluid featurs py-5">
       <div className="container py-5">
         <div className="row g-4">
