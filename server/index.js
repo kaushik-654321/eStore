@@ -6,6 +6,7 @@ import fruitRoutes from "./routes/fruitRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import couponRoutes from "./routes/couponRoutes.js";
 import cookieParser from 'cookie-parser';
 
 dotenv.config();
@@ -38,6 +39,7 @@ app.use("/fruits", fruitRoutes);
 app.use("/category", categoryRoutes);
 app.use("/api", userRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/coupon", couponRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

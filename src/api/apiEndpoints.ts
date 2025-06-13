@@ -12,5 +12,8 @@ export const API_ENDPOINTS = {
     },
     CART:{
         api: `${API_BASE_URL}/api/cart`
+    },
+    COUPON :{
+        api: `${API_BASE_URL}/api/coupon`
     }
 };

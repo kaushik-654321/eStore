@@ -5,9 +5,18 @@ interface modalProps {
   isOpen: boolean,
   onClose: () => void,
   isCoupon?: boolean;
+  coupons?:
+  {
+    _id: string;
+    name: string;
+    code: string;
+    discount: number;
+    expiresOn: string
+  }[]
+
 }
 
-const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon }) => {
+const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons }) => {
   const [tab, setTab] = useState(0);
 
   const changeTab = (value: number) => {
@@ -19,6 +28,29 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon }) => {
     { label: 'Signup', index: 1, className: 'signup-tab' },
   ];
 
+  const renderCoupons = (couponData) => {
+    return (
+      <div className="container mb-3">
+        <div className="text-start d-flex align-items-center mb-4">
+          <input type="text" className="border-0 border-bottom rounded py-1 " placeholder="Coupon Code" />
+          <button className="btn border-secondary rounded-pill px-2 ms-2 text-primary bg-white" type="button">Apply Coupon</button>
+        </div>
+        <div className="row gy-3">
+          {couponData.map((coup) => (
+            <div key={coup._id} className="col-12 col-md-6 col-lg-4">
+              <button
+                className="btn border-secondary bg-white rounded-pill text-primary w-100 text-center"
+                type="button"
+                onClick={() => console.log(`Apply coupon: ${coup.code}`)}
+              >
+                <div className="fw-bold">{coup.code}</div>
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
   if (!isOpen) return null;
 
   return (
@@ -39,7 +71,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon }) => {
             <div className="container-fluid">
               <div
                 className="container text-center rounded mt-1 d-flex justify-content-center align-items-center flex-column">
-                {isCoupon ? <>ass</> : (
+                {isCoupon ? <>{coupons.length > 0 && renderCoupons(coupons)}</> : (
                   <>
                     <div className="first-section border border-primary d-flex justify-content-between align-items-center">
                       {tabItems.map(({ label, index, className }) => (

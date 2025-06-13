@@ -6,12 +6,27 @@ import { Items } from '../types/item.type';
 import { PageHeader } from './PageHeader';
 import { NormalizeCartItem } from '../utils/cartNormalizer';
 import { updateActivity } from '../utils/updateActivity';
+import { fetchData } from '../services/api';
+import { API_ENDPOINTS } from "../api/apiEndpoints";
+import axios from 'axios';
 import ModalPage from './Modal';
 import { withModal } from '../components/HOC/withModal';
 
+
 const CouponModal = withModal(ModalPage);
+
+interface coupons {
+    _id: string;
+    name: string;
+    code: string;
+    discount: number;
+    expiresOn: string
+}
+
+
 function CartPage() {
     const [showModal, setshowModal] = useState<boolean>(false);
+    const [couponData, setCouponData] = useState<coupons[]>([]);
     const dispatch = useDispatch<AppDispatch>();
     const cartItems = useSelector((state: RootState) => state.cart.items);
     const normalizedCartItems: Items[] = NormalizeCartItem(cartItems);
@@ -31,6 +46,36 @@ function CartPage() {
         return () => clearTimeout(timer);
     }, []);
 
+    useEffect(() => {
+        if (!showModal) return;
+        const controller = new AbortController();
+        const getCouponData = () => {
+            try {
+                fetchData({ API_URL: API_ENDPOINTS.COUPON.api, signal: controller.signal })
+                    .then((result) => {
+                        if (result.error) {
+                            console.log(result.error)
+                        }
+                        else {
+                            setCouponData(result)
+                        }
+                    })
+            }
+            catch (error) {
+                if (error.name === 'AbortError') {
+                    console.log('Coupon fetch aborted.');
+                } else {
+                    console.error('Fetch error:', error);
+                }
+            }
+
+        };
+        getCouponData();
+        // Cleanup function: aborts fetch if modal closes or component unmounts
+        return () => {
+            controller.abort();
+        }
+    }, [showModal])
 
     const ItemaddTocart = (Itemdata: Items) => {
         if (isAuthenticated) {
@@ -62,6 +107,7 @@ function CartPage() {
             updateActivity();
         }
     }
+
 
     const handleModal = () => {
         setshowModal(true);
@@ -137,7 +183,7 @@ function CartPage() {
                                 <input type="text" className="border-0 border-bottom rounded py-3 mb-4" placeholder="Coupon Code" />
                                 <button className="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button" onClick={handleModal}>Apply Coupon</button>
                             </div>
-                            <CouponModal isOpen={showModal} onClose={()=>setshowModal(false)} isCoupon={true}/>
+                            {couponData?.length > 0 && <CouponModal isOpen={showModal} onClose={() => setshowModal(false)} isCoupon={true} coupons={couponData} />}
                             <div className="row g-4 justify-content-end">
                                 <div className="col-8"></div>
                                 <div className="col-sm-8 col-md-7 col-lg-6 col-xl-4">
