@@ -12,9 +12,10 @@ export const getAllCoupon = async (req, res) => {
 }
 
 export const getOneCoupon = async (req, res) => {
-    const { coupCode } = req.params;
+    const { code } = req.params;
+    console.log("+++", code);
     try {
-        const coupon = await Coupon.find({ coupCode });
+        const coupon = await Coupon.find({ code });
         if (!coupon) return res.status(200).json({ coupon: [] });
         res.status(200).json(coupon);
     }

@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import FormPage from './Form';
+import { fetchData } from '../services/api';
+import { API_ENDPOINTS } from "../api/apiEndpoints";
+
+
+
 
 interface modalProps {
   isOpen: boolean,
@@ -18,6 +23,10 @@ interface modalProps {
 
 const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons }) => {
   const [tab, setTab] = useState(0);
+  const couponRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+
 
   const changeTab = (value: number) => {
     setTab(value);
@@ -27,17 +36,50 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
     { label: 'Login', index: 0, className: 'login-tab' },
     { label: 'Signup', index: 1, className: 'signup-tab' },
   ];
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    }
+    else {
+      document.body.style.overflow = '';
+    }
 
+    return () => {
+      document.body.style.overflow = '';
+    }
+
+  }, [isOpen])
+
+
+
+  const coupValidate = () => {
+    let coupCode = couponRef.current.value;
+    try {
+      fetchData({ API_URL: `${API_ENDPOINTS.COUPON.api}`,  coupCode})
+        .then((result) => {
+          if (result.error) {
+            throw new Error(result.error);
+          }
+          else {
+            console.log("coupon", coupCode);
+          }
+        })
+    }
+    catch (error) {
+      console.log('fetch Error', error);
+    }
+
+  }
   const renderCoupons = (couponData) => {
     return (
       <div className="container mb-3">
         <div className="text-start d-flex align-items-center mb-4">
-          <input type="text" className="border-0 border-bottom rounded py-1 " placeholder="Coupon Code" />
-          <button className="btn border-secondary rounded-pill px-2 ms-2 text-primary bg-white" type="button">Apply Coupon</button>
+          <input type="text" name="coupCode" className="border-0 border-bottom rounded py-1 px-4 w-50" ref={couponRef} placeholder="Coupon Code" />
+          <button className="btn border-secondary rounded-pill px-2 ms-2 text-primary bg-white coup-apply" onClick={() => coupValidate()} type="button">Apply Coupon</button>
         </div>
         <div className="row gy-3">
           {couponData.map((coup) => (
-            <div key={coup._id} className="col-12 col-md-6 col-lg-4">
+            <div key={coup._id} className="col-6 col-md-6 col-lg-4">
               <button
                 className="btn border-secondary bg-white rounded-pill text-primary w-100 text-center"
                 type="button"
@@ -54,8 +96,8 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
   if (!isOpen) return null;
 
   return (
-    <div className=" modal-backdrop-custom" id="searchModal" tabIndex={-1} aria-labelledby="exampleModalLabel">
-      <div className="modal-dialog modal-dialog-centered">
+    <div className="modal-backdrop-custom" id="searchModal" tabIndex={-1} aria-labelledby="exampleModalLabel">
+      <div className="modal-dialog modal-dialog-centered" ref={modalRef} onClick={(e) => e.stopPropagation()}>
         <div className="modal-content rounded-0 ">
           <div className="modal-header">
 

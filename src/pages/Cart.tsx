@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
 import { addToCart, updateQuantity, removeCart, addToCartServer, updateCartServer, removeCartServer } from '../features/cartSlice';
@@ -30,21 +30,13 @@ function CartPage() {
     const dispatch = useDispatch<AppDispatch>();
     const cartItems = useSelector((state: RootState) => state.cart.items);
     const normalizedCartItems: Items[] = NormalizeCartItem(cartItems);
-    const cartTableRef = useRef(null);
     // console.log("normalizedCartItems", normalizedCartItems);
 
     const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
     const userInfo = useSelector((state: RootState) => state.user);
     const { isAuthenticated, userId } = userInfo;
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            cartTableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            cartTableRef.current?.focus();
-        }, 0); // Delay to ensure layout is complete
-
-        return () => clearTimeout(timer);
-    }, []);
+ 
 
     useEffect(() => {
         if (!showModal) return;
@@ -124,7 +116,7 @@ function CartPage() {
                     {cartTotal < 1 && <span>add some items</span>}
                     {normalizedCartItems && normalizedCartItems.length > 0 && (
                         <>
-                            <div className="table-responsive" ref={cartTableRef} tabIndex={-1}>
+                            <div className="table-responsive">
                                 <table className="table">
                                     <thead>
                                         <tr>
