@@ -157,7 +157,19 @@ form {
     max-height: 70vh;
     flex: 1
 }
+.skip-to-content {
+  position: absolute;
+  left: -999px;
+  top: 2px;
+  background: white;
+  color: blue;
+  padding: 8px;
+  z-index: 99999;
+}
 
+.skip-to-content:focus {
+  left: 8px;
+}
 @media screen and (min-width:768px) {
     .modal-dialog{
         width:70%;
