@@ -116,8 +116,8 @@ const FruitsShop: React.FC = () => {
                                             {visibleItems.map((data) => (
                                                 <div className="col-md-6 col-lg-4 col-xl-3">
                                                     <div className="rounded position-relative fruite-item">
-                                                        <div className="fruite-img">
-                                                            <img src={data.image} className="img-fluid w-100 rounded-top" alt="" />
+                                                        <div className="fruite-img" style={{height:'160px'}}>
+                                                            <img src={data.image} className="img-fluid w-100 rounded-top" alt="fruite-item" />
                                                         </div>
                                                         <div className="text-white bg-secondary px-3 py-1 rounded position-absolute" style={{ top: "10px", left: "10px" }}>{data.category}</div>
                                                         <div className="p-4 border border-secondary border-top-0 rounded-bottom">

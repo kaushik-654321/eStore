@@ -32,7 +32,7 @@ const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits })
         fruits?.map(fruit => (
             <div key={fruit._id} className="col-md-6 col-lg-6 col-xl-4">
                 <div className="rounded position-relative fruite-item">
-                    <div className="fruite-img">
+                    <div className="fruite-img" style={{height:'160px'}}>
                         <img
                             src={fruit.image}
                             className="img-fluid w-100 rounded-top"
