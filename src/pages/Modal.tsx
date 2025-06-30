@@ -20,6 +20,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
   const [tab, setTab] = useState(0);
   const couponRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string>(null);
 
   const changeTab = (value: number) => setTab(value);
 
@@ -29,66 +30,72 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
   ];
 
   // 💡 Lock scroll and focus input when modal opens
- useEffect(() => {
-  if (!isOpen || !modalRef.current) return;
+  useEffect(() => {
+    if (!isOpen || !modalRef.current) return;
 
-  const modalEl = modalRef.current;
+    const modalEl = modalRef.current;
 
-  const trapFocus = (e: KeyboardEvent) => {
-    const focusableEls = modalEl.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
+    const trapFocus = (e: KeyboardEvent) => {
+      const focusableEls = modalEl.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
 
-    const firstEl = focusableEls[0];
-    const lastEl = focusableEls[focusableEls.length - 1];
+      const firstEl = focusableEls[0];
+      const lastEl = focusableEls[focusableEls.length - 1];
 
-    if (e.key !== 'Tab') return;
+      if (e.key !== 'Tab') return;
 
-    if (e.shiftKey) {
-      if (document.activeElement === firstEl) {
-        e.preventDefault();
-        lastEl.focus();
+      if (e.shiftKey) {
+        if (document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
       }
-    } else {
-      if (document.activeElement === lastEl) {
-        e.preventDefault();
-        firstEl.focus();
-      }
-    }
-  };
+    };
 
-  // Disable scroll
-  document.body.style.overflow = 'hidden';
-  document.documentElement.style.overflow = 'hidden';
+    // Disable scroll
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
 
-  // Wait for elements to render before focusing
-  setTimeout(() => {
-    const focusableEls = modalEl.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    focusableEls[0]?.focus();
-  }, 0);
+    // Wait for elements to render before focusing
+    setTimeout(() => {
+      const focusableEls = modalEl.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      focusableEls[0]?.focus();
+    }, 0);
 
-  document.addEventListener('keydown', trapFocus);
+    document.addEventListener('keydown', trapFocus);
 
-  return () => {
-    document.body.style.overflow = '';
-    document.documentElement.style.overflow = '';
-    document.removeEventListener('keydown', trapFocus);
-  };
-}, [isOpen]);
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      document.removeEventListener('keydown', trapFocus);
+    };
+  }, [isOpen]);
 
   const coupValidate = () => {
     const coupCode = couponRef.current?.value?.trim();
     if (!coupCode) return;
 
     try {
-      fetchData({ API_URL: `${API_ENDPOINTS.COUPON.api}`, coupCode })
+      fetchData({ API_URL: `${API_ENDPOINTS.COUPON.api}/${coupCode}`, })
         .then((result) => {
           if (result.error) {
             throw new Error(result.error);
           } else {
-            console.log("coupon", coupCode);
+            if (result.length < 1) {
+              setError('Coupon not valid')
+            }
+            else {
+              onClose();
+            }
+
           }
         });
     } catch (error) {
@@ -101,7 +108,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
 
     return (
       <div className="container mb-3">
-        <div className="text-start d-flex align-items-center mb-4">
+        <div className={`text-start d-flex align-items-center ${error ?? 'mb-4'}`} >
           <input
             type="text"
             name="coupCode"
@@ -116,14 +123,24 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
           >
             Apply Coupon
           </button>
+
+
         </div>
+        {error && (
+          <div className='couponError mb-4'>
+            <span> {error} </span>
+          </div>
+        )}
+
+
         <div className="row gy-3">
-          {couponData.map((coup) => (
+
+          {couponData.slice(0, 4).map((coup) => (
             <div key={coup._id} className="col-6 col-md-6 col-lg-4">
               <button
                 className="btn border-secondary bg-white rounded-pill text-primary w-100 text-center"
                 type="button"
-                onClick={() => console.log(`Apply coupon: ${coup.code}`)}
+                onClick={() => { onClose(); setError(null) }}
               >
                 <div className="fw-bold">{coup.code}</div>
               </button>
@@ -159,7 +176,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
             <button
               type="button"
               className="btn-close"
-              onClick={onClose}
+              onClick={() => { onClose(); setError(null) }}
               aria-label="Close"
               tabIndex={0}
             ></button>

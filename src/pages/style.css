@@ -170,6 +170,14 @@ form {
 .skip-to-content:focus {
   left: 8px;
 }
+.couponError{
+    display: flex;
+    margin: 0;
+    padding: 0;
+    color: red;
+    font-size: 13px;
+    font-weight: 400;
+}
 @media screen and (min-width:768px) {
     .modal-dialog{
         width:70%;
