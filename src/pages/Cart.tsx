@@ -11,6 +11,7 @@ import { API_ENDPOINTS } from "../api/apiEndpoints";
 import axios from 'axios';
 import ModalPage from './Modal';
 import { withModal } from '../components/HOC/withModal';
+import { useCouponStore } from '../app/useCouponStore';
 
 
 const CouponModal = withModal(ModalPage);
@@ -35,8 +36,11 @@ function CartPage() {
     const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
     const userInfo = useSelector((state: RootState) => state.user);
     const { isAuthenticated, userId } = userInfo;
-
-
+    const { selectedCoupon, setSelectedCoupon, clearSelectedCoupon } = useCouponStore();
+    const discountedPrice = selectedCoupon && (cartTotal * selectedCoupon?.discount) / 100;
+    const cartBalance = selectedCoupon && (cartTotal - discountedPrice);
+    const couponRef = useRef<HTMLInputElement>(null);
+    const [error, setError] = useState<string>(null);
 
     useEffect(() => {
         if (!showModal) return;
@@ -101,7 +105,36 @@ function CartPage() {
     }
 
     const handleModal = () => {
-        setshowModal(true);
+        const coupCode = couponRef.current?.value?.trim();
+
+        if (selectedCoupon) {
+            clearSelectedCoupon();
+        }
+        else if (coupCode) {
+            try {
+                fetchData({ API_URL: `${API_ENDPOINTS.COUPON.api}/${coupCode}`, })
+                    .then((result) => {
+                        if (result.error) {
+                            throw new Error(result.error);
+                        } else {
+                            if (result.length < 1) {
+                                setError('Coupon not valid')
+                            }
+                            else {
+                                setSelectedCoupon(result[0]);
+                                setError(null);
+                            }
+
+                        }
+                    });
+            } catch (error) {
+                console.log('fetch Error', error);
+            }
+        }
+        else {
+            setshowModal(true);
+        }
+
     }
 
     return (
@@ -169,9 +202,18 @@ function CartPage() {
                                     </table>
                                 </div>
                                 <div className="mt-5 text-start d-flex align-items-center">
-                                    <input type="text" className="border-0 border-bottom rounded py-3 mb-4" name="coupCode" placeholder="Coupon Code" />
-                                    <button className="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button" onClick={handleModal}>Apply Coupon</button>
+                                    <input type="text" ref={couponRef} className="border-0 border-bottom rounded py-3 mb-4" name="coupCode" value={selectedCoupon === null ? null : selectedCoupon?.code} placeholder="Coupon Code" readOnly={selectedCoupon !== null} />
+                                    <button className="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button" onClick={handleModal}>
+                                        {selectedCoupon === null ? 'Apply Coupon' : 'Cancelled Coupon'}
+                                    </button>
+
+
                                 </div>
+                                {error && (
+                                    <div className='couponError mb-4'>
+                                        <span> {error} </span>
+                                    </div>
+                                )}
                                 {couponData?.length > 0 && <CouponModal isOpen={showModal} onClose={() => setshowModal(false)} isCoupon={true} coupons={couponData} />}
                                 <div className="row g-4 justify-content-end">
                                     <div className="col-8"></div>
@@ -183,17 +225,25 @@ function CartPage() {
                                                     <h5 className="mb-0 me-4">Subtotal:</h5>
                                                     <p className="mb-0">${cartTotal?.toFixed(2)}</p>
                                                 </div>
+                                                {selectedCoupon && <><div className="d-flex justify-content-between mb-4">
+                                                    <h5 className="mb-0 me-4">Discount {selectedCoupon?.code} </h5>
+                                                    <p className="mb-0">-${discountedPrice.toFixed(2)}</p>
+                                                </div>
+                                                </>}
+
+
                                                 <div className="d-flex justify-content-between">
                                                     <h5 className="mb-0 me-4">Shipping</h5>
                                                     <div className="">
                                                         <p className="mb-0">Flat rate: $0.00</p>
                                                     </div>
                                                 </div>
+
                                                 <p className="mb-0 text-end">Shipping to India.</p>
                                             </div>
                                             <div className="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                                                 <h5 className="mb-0 ps-4 me-4">Total</h5>
-                                                <p className="mb-0 pe-4">${cartTotal?.toFixed(2)}</p>
+                                                <p className="mb-0 pe-4">${cartBalance ? cartBalance?.toFixed(2) : cartTotal?.toFixed(2)}</p>
                                             </div>
                                             <button className="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
                                         </div>

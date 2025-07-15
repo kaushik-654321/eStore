@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import FormPage from './Form';
 import { fetchData } from '../services/api';
 import { API_ENDPOINTS } from "../api/apiEndpoints";
+import { useCouponStore } from '../app/useCouponStore';
 
 interface modalProps {
   isOpen: boolean,
@@ -23,7 +24,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
   const [error, setError] = useState<string>(null);
 
   const changeTab = (value: number) => setTab(value);
-
+  const { setSelectedCoupon } = useCouponStore();
   const tabItems = [
     { label: 'Login', index: 0, className: 'login-tab' },
     { label: 'Signup', index: 1, className: 'signup-tab' },
@@ -93,7 +94,9 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
               setError('Coupon not valid')
             }
             else {
+              setSelectedCoupon(result[0]);
               onClose();
+              setError(null);
             }
 
           }
@@ -140,7 +143,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
               <button
                 className="btn border-secondary bg-white rounded-pill text-primary w-100 text-center"
                 type="button"
-                onClick={() => { onClose(); setError(null) }}
+                onClick={() => { onClose(); setError(null); setSelectedCoupon(coup) }}
               >
                 <div className="fw-bold">{coup.code}</div>
               </button>
