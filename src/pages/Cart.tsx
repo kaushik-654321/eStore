@@ -169,7 +169,7 @@ function CartPage() {
                                     </table>
                                 </div>
                                 <div className="mt-5 text-start d-flex align-items-center">
-                                    <input type="text" className="border-0 border-bottom rounded py-3 mb-4" placeholder="Coupon Code" />
+                                    <input type="text" className="border-0 border-bottom rounded py-3 mb-4" name="coupCode" placeholder="Coupon Code" />
                                     <button className="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button" onClick={handleModal}>Apply Coupon</button>
                                 </div>
                                 {couponData?.length > 0 && <CouponModal isOpen={showModal} onClose={() => setshowModal(false)} isCoupon={true} coupons={couponData} />}
