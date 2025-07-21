@@ -8,10 +8,10 @@ import { NormalizeCartItem } from '../utils/cartNormalizer';
 import { updateActivity } from '../utils/updateActivity';
 import { fetchData } from '../services/api';
 import { API_ENDPOINTS } from "../api/apiEndpoints";
-import axios from 'axios';
 import ModalPage from './Modal';
 import { withModal } from '../components/HOC/withModal';
 import { useCouponStore } from '../app/useCouponStore';
+import { Link } from 'react-router-dom';
 
 
 const CouponModal = withModal(ModalPage);
@@ -245,7 +245,7 @@ function CartPage() {
                                                 <h5 className="mb-0 ps-4 me-4">Total</h5>
                                                 <p className="mb-0 pe-4">${cartBalance ? cartBalance?.toFixed(2) : cartTotal?.toFixed(2)}</p>
                                             </div>
-                                            <button className="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
+                                            <Link to="/checkout" className="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">Proceed Checkout</Link>
                                         </div>
                                     </div>
                                 </div>

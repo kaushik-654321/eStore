@@ -4,12 +4,17 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { NormalizeCartItem } from '../utils/cartNormalizer';
 import { Items } from '../types/item.type';
+import { useCouponStore } from '../app/useCouponStore';
 
 export const CheckoutPage = () => {
     const cartItems = useSelector((state: RootState) => state.cart.items);
-    const normalizedCartItems : Items[] = NormalizeCartItem(cartItems);
-    console.log(normalizedCartItems);
+    const normalizedCartItems: Items[] = NormalizeCartItem(cartItems);
+    // console.log(normalizedCartItems);
     const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
+    const { selectedCoupon } = useCouponStore();
+    const discountedPrice = selectedCoupon && (cartTotal * selectedCoupon?.discount) / 100;
+    const cartBalance = selectedCoupon && (cartTotal - discountedPrice);
+    console.log(cartBalance);
     return (
         <>
             <PageHeader breadcrumb={'Checkout'} />
@@ -113,7 +118,10 @@ export const CheckoutPage = () => {
                                                 </td>
                                                 <td className="py-5">
                                                     <div className="py-3 border-bottom border-top">
-                                                        <p className="mb-0 text-dark">${cartTotal?.toFixed(2)}</p>
+                                                        <p className="mb-0 text-dark">
+                                                            <span className="original-price">  ${cartTotal?.toFixed(2)}</span>
+                                                            <span className="discounted-price"> ${cartBalance?.toFixed(2)}</span>
+                                                        </p>
                                                     </div>
                                                 </td>
                                             </tr>

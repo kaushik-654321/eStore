@@ -178,6 +178,16 @@ form {
     font-size: 13px;
     font-weight: 400;
 }
+.original-price {
+  text-decoration: line-through;
+  color: #999;
+  margin-right: 8px;
+}
+
+.discounted-price {
+  color: #e60000;
+  font-weight: bold;
+}
 @media screen and (min-width:768px) {
     .modal-dialog{
         width:70%;
