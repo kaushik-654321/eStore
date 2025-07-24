@@ -154,6 +154,13 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
     );
   };
 
+   const handleLogin = () => {
+    window.open(
+    'https://opulent-barnacle-qx7jjxjg7wvh9vp5-5000.app.github.dev/api/auth/google',
+    '_self'
+  );
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -207,6 +214,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
                         ))}
                       </div>
                       <FormPage index={tab} onClose={onClose} />
+                      <button onClick={handleLogin}>Login with Google</button>
                     </>
                   )}
               </div>

@@ -2,6 +2,7 @@ import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
 
 
+
 export const registeredUser = async (req, res) => {
     try {
         const { name: fullName, email, mobile, password } = req.body;
@@ -39,5 +40,22 @@ export const loginusers = async (req, res) => {
     catch (error) {
         res.status(500).json({ message: 'Server Error', error });
     }
+}
+
+export const OauthUserLoggedIn = async (req, res) => {
+    if (req.isAuthenticated()) {
+        return res.status(200).json(req.user);
+
+    } else {
+        return res.status(401).json({ message: 'Not logged in' });
+
+    }
+}
+
+
+export const OauthUserLoggedOut = async (req, res) => {
+    req.logout(() => {
+    res.redirect('https://opulent-barnacle-qx7jjxjg7wvh9vp5-3000.app.github.dev');
+  });
 }
 
