@@ -42,30 +42,7 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
-// // Sample route
-// app.get('/auth/google', passport.authenticate('google', {
-//   scope: ['profile', 'email'],
-// }));
 
-// app.get('/auth/google/callback', passport.authenticate('google', {
-//   failureRedirect: '/',
-// }), (req, res) => {
-//   res.redirect('https://opulent-barnacle-qx7jjxjg7wvh9vp5-3000.app.github.dev'); // redirect to React app
-// });
-
-// app.get('/api/user', (req, res) => {
-//   if (req.isAuthenticated()) {
-//     res.json(req.user);
-//   } else {
-//     res.status(401).json({ message: 'Not logged in' });
-//   }
-// });
-
-// app.get('/auth/logout', (req, res) => {
-//   req.logout(() => {
-//     res.redirect('http://localhost:3000');
-//   });
-// });
 app.use("/fruits", fruitRoutes);
 app.use("/category", categoryRoutes);
 app.use("/api", userRoutes);

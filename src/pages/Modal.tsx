@@ -154,18 +154,18 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
     );
   };
 
-   const handleLogin = () => {
+  const handleLogin = () => {
     window.open(
-    'https://opulent-barnacle-qx7jjxjg7wvh9vp5-5000.app.github.dev/api/auth/google',
-    '_self'
-  );
+      'https://opulent-barnacle-qx7jjxjg7wvh9vp5-5000.app.github.dev/api/auth/google',
+      '_self'
+    );
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="modal-backdrop-custom" role="presentation"
-      onClick={onClose} >
+    >
       <div
         className="modal-dialog modal-dialog-centered"
         ref={modalRef}
@@ -214,7 +214,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
                         ))}
                       </div>
                       <FormPage index={tab} onClose={onClose} />
-                      <button onClick={handleLogin}>Login with Google</button>
+                      <button  className="btn btn-outline-primary rounded-pill px-4 google-login-btn" onClick={handleLogin}> <i className="bi bi-google me-2"></i> Login with Google</button>
                     </>
                   )}
               </div>
