@@ -2,6 +2,7 @@
   "name": "codespaces-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://kaushik-654321.github.io/eStore",
   "dependencies": {
     "@apollo/client": "^3.13.1",
     "@reduxjs/toolkit": "^2.6.1",
@@ -17,6 +18,7 @@
     "cors": "^2.8.5",
     "express-session": "^1.18.2",
     "formik": "^2.4.6",
+    "gh-pages": "^6.3.0",
     "graphql": "^16.10.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
@@ -42,7 +44,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "dev": "concurrently \"BROWSER=none WDS_SOCKET_PORT=0 vite --port 3000\" \"npm run dev --prefix ../eStore/server\""
+    "dev": "concurrently \"BROWSER=none WDS_SOCKET_PORT=0 vite --port 3000\" \"npm run dev --prefix ../eStore/server\"",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "eslintConfig": {
     "extends": [

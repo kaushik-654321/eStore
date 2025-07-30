@@ -214,7 +214,10 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
                         ))}
                       </div>
                       <FormPage index={tab} onClose={onClose} />
-                      <button  className="btn btn-outline-primary rounded-pill px-4 google-login-btn" onClick={handleLogin}> <i className="bi bi-google me-2"></i> Login with Google</button>
+                      <button className="btn btn-outline-primary rounded-pill px-4 google-login-btn" onClick={handleLogin}>
+                         <i className="bi bi-google me-2"></i> 
+                         Login with Google
+                      </button>
                     </>
                   )}
               </div>
