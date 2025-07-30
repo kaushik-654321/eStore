@@ -3,7 +3,7 @@ import './App.css';
 import Navbar from './navbar';
 import Footer from './pages/Footer';
 import Copyright from './pages/Copyright';
-import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/HomePage';
 import Spinner from './Spinner';
 import Shop from './pages/shop';
