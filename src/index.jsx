@@ -11,17 +11,14 @@ import { HashRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <HashRouter>
-    <Provider store={store}>
-      <PersistGate loading="null" persistor={persistor}>
 
-        <App />
+  <Provider store={store}>
+    <PersistGate loading="null" persistor={persistor}>
 
-      </PersistGate>
-    </Provider>
-  </HashRouter>
+      <App />
 
-
+    </PersistGate>
+  </Provider>
 
 );
 
