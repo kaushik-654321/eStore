@@ -9,12 +9,14 @@ export const API_ENDPOINTS = {
     },
     USER: {
         api: `${API_BASE_URL}/api/auth`,
-        authUser : `${API_BASE_URL}/api/user`
+        authUser : `${API_BASE_URL}/api/user`,
+        user: `${API_BASE_URL}/api/user`
     },
     CART:{
         api: `${API_BASE_URL}/api/cart`
     },
     COUPON :{
         api: `${API_BASE_URL}/api/coupon`
-    }
+    },
+
 };

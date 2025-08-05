@@ -18,7 +18,7 @@ const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    fetch('https://opulent-barnacle-qx7jjxjg7wvh9vp5-5000.app.github.dev/api/user', {
+    fetch(`${API_ENDPOINTS.USER.user}`, {
       method: 'GET',
       credentials: 'include', // 👈 Important to send session cookie
     })
