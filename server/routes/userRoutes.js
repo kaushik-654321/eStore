@@ -20,7 +20,7 @@ userRoutes.get('/auth/google', passport.authenticate('google', {
 userRoutes.get('/auth/google/callback', passport.authenticate('google', {
   failureRedirect: '/',
 }), (req, res) => {
-  res.redirect('https://kaushik-654321.github.io');
+  res.redirect('https://kaushik-654321.github.io/eStore/');
 });
 
 
