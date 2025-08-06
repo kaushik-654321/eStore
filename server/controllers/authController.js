@@ -43,6 +43,8 @@ export const loginusers = async (req, res) => {
 }
 
 export const OauthUserLoggedIn = async (req, res) => {
+    console.log('Request session:', req.session);
+    console.log('Request user:', req.user);
     if (req.isAuthenticated()) {
         return res.status(200).json(req.user);
 
@@ -55,7 +57,7 @@ export const OauthUserLoggedIn = async (req, res) => {
 
 export const OauthUserLoggedOut = async (req, res) => {
     req.logout(() => {
-    res.redirect('https://kaushik-654321.github.io');
-  });
+        res.redirect('https://kaushik-654321.github.io');
+    });
 }
 
