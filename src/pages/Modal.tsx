@@ -156,7 +156,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
 
   const handleLogin = () => {
     window.open(
-      'https://opulent-barnacle-qx7jjxjg7wvh9vp5-5000.app.github.dev/api/auth/google',
+      'https://estore-production-4c0c.up.railway.app/api/auth/google',
       '_self'
     );
   };
