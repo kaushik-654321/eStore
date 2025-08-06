@@ -16,13 +16,13 @@ const app = express();
 app.use(cookieParser());
 // Middleware
 app.use(express.json());
-app.use(session({
-  secret: 'your-secret',
-  resave: false,
-  saveUninitialized: false,
-}));
+// app.use(session({
+//   secret: 'your-secret',
+//   resave: false,
+//   saveUninitialized: false,
+// }));
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 const allowedOrigins = [
   "https://kaushik-654321.github.io", // Your frontend URL
