@@ -20,9 +20,13 @@ userRoutes.get('/auth/google', (req, res, next) => {
 }));
 
 // Google Auth Callback
-userRoutes.get('/auth/google/callback', passport.authenticate('google', {
+userRoutes.get('/auth/google/callback', (req, res, next) => {
+  console.log("Callback hit");
+  next()
+}, passport.authenticate('google', {
   failureRedirect: '/',
 }), (req, res) => {
+  console.log("Authenticated user:", req.user);
   res.redirect('https://kaushik-654321.github.io/eStore/');
 });
 
