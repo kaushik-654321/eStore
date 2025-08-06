@@ -20,6 +20,10 @@ app.use(session({
   secret: 'your-secret',
   resave: false,
   saveUninitialized: false,
+  cookie:{
+    secure: true,
+    sameSite: 'none', 
+  }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
