@@ -10,38 +10,38 @@ import Facts from './Facts';
 import Testimonials from '../testimonials';
 import { API_ENDPOINTS } from '../api/apiEndpoints';
 import { setUser } from '../features/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../app/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../app/store';
 
 
 const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const user = useSelector((state: RootState) => state.user);
-  useEffect(() => {
-    if (!user?.userId) {
-      fetch(`${API_ENDPOINTS.USER.user}`, {
-        method: 'GET',
-        credentials: 'include', // 👈 Important to send session cookie
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error('Not logged in');
-          return res.json();
-        })
-        .then((data) => {
-          const name = data?._json.name;
-          const email = data?._json.email;
-          const userId = data?.id;
-          const token = data?.id
 
-          dispatch(setUser({ name, email, userId, token }));
-          console.log('✅ Logged in user:', data);
-          // setUser(userObj);
-        })
-        .catch((err) => {
-          console.log('❌ Not logged in');
-        });
-    }
-  }, [user])
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    fetch(`${API_ENDPOINTS.USER.user}`, {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Not logged in');
+        return res.json();
+      })
+      .then((data) => {
+        const name = data?._json.name;
+        const email = data?._json.email;
+        const userId = data?.id;
+        const token = data?.id;
+        dispatch(setUser({ name, email, userId, token }));
+        console.log('✅ Logged in user:', data);
+      })
+      .catch((err) => {
+        console.log('❌ Not logged in');
+      });
+  }, 500); // Wait 0.5 seconds
+
+  return () => clearTimeout(timer);
+}, []);
 
   return (
     <>
