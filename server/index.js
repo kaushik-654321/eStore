@@ -14,20 +14,9 @@ import session from 'express-session';
 
 console.log("Mongo URI:", process.env.MONGO_URI);
 const app = express();
-app.use(cookieParser());
+
 // Middleware
 app.use(express.json());
-app.use(session({
-  secret: 'your-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie:{
-    secure: true,
-    sameSite: 'none', 
-  }
-}));
-app.use(passport.initialize());
-app.use(passport.session());
 
 const allowedOrigins = [
   "https://kaushik-654321.github.io", // Your frontend URL
@@ -40,6 +29,22 @@ app.use(
     credentials: true, // Allow cookies if needed
   })
 );
+app.use(cookieParser());
+app.use(session({
+  secret: 'your-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie:{
+    secure: true,
+    sameSite: 'none', 
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
+  }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 
 // Connect to MongoDB
 mongoose
