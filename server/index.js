@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import './passportConfig.js'; // initialize strategies
 import fruitRoutes from "./routes/fruitRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -9,7 +10,7 @@ import couponRoutes from "./routes/couponRoutes.js";
 import cookieParser from 'cookie-parser';
 import passport from "passport";
 import session from 'express-session';
-import './passportConfig.js'; // initialize strategies
+
 
 console.log("Mongo URI:", process.env.MONGO_URI);
 const app = express();
