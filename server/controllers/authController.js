@@ -55,7 +55,7 @@ export const OauthUserLoggedIn = async (req, res) => {
 
 export const OauthUserLoggedOut = async (req, res) => {
     req.logout(() => {
-    res.redirect('https://opulent-barnacle-qx7jjxjg7wvh9vp5-3000.app.github.dev');
+    res.redirect('https://kaushik-654321.github.io');
   });
 }
 

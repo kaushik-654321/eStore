@@ -20,7 +20,7 @@ userRoutes.get('/auth/google', passport.authenticate('google', {
 userRoutes.get('/auth/google/callback', passport.authenticate('google', {
   failureRedirect: '/',
 }), (req, res) => {
-  res.redirect('https://opulent-barnacle-qx7jjxjg7wvh9vp5-3000.app.github.dev');
+  res.redirect('https://kaushik-654321.github.io');
 });
 
 
