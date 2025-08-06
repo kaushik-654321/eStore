@@ -42,10 +42,10 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
-
+app.use("/api", userRoutes);
 app.use("/fruits", fruitRoutes);
 app.use("/category", categoryRoutes);
-app.use("/api", userRoutes);
+
 app.use("/api/cart", cartRoutes);
 app.use("/api/coupon", couponRoutes);
 

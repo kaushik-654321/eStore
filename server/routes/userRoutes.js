@@ -12,8 +12,11 @@ userRoutes.get('/user', OauthUserLoggedIn);
 userRoutes.get('/auth/logout', OauthUserLoggedOut);
 
 // Google Auth Route
-userRoutes.get('/auth/google', passport.authenticate('google', {
-    scope: ['profile', 'email'],
+userRoutes.get('/auth/google', (req, res, next) => {
+  console.log("Google Auth Route Hit");
+  next()
+}, passport.authenticate('google', {
+  scope: ['profile', 'email'],
 }));
 
 // Google Auth Callback
