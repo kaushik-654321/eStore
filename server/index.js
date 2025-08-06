@@ -25,7 +25,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const allowedOrigins = [
-  "https://kaushik-654321.github.io/eStore", // Your frontend URL
+  "https://kaushik-654321.github.io", // Your frontend URL
 ]
 app.use(
   cors({
