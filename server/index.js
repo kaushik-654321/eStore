@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import './passportConfig.js'; // initialize strategies
 import fruitRoutes from "./routes/fruitRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -10,13 +9,21 @@ import couponRoutes from "./routes/couponRoutes.js";
 import cookieParser from 'cookie-parser';
 import passport from "passport";
 import session from 'express-session';
-
+import './passportConfig.js'; // initialize strategies
 
 console.log("Mongo URI:", process.env.MONGO_URI);
 const app = express();
-
+app.use(cookieParser());
 // Middleware
 app.use(express.json());
+app.use(session({
+  secret: 'your-secret',
+  resave: false,
+  saveUninitialized: false,
+  
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 const allowedOrigins = [
   "https://kaushik-654321.github.io", // Your frontend URL
@@ -29,22 +36,6 @@ app.use(
     credentials: true, // Allow cookies if needed
   })
 );
-app.use(cookieParser());
-app.use(session({
-  name: 'connect.sid',
-  secret: 'your-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: true,           // must be true for cross-origin HTTPS
-    sameSite: 'none',       // required for cross-origin
-  }
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
-
 
 // Connect to MongoDB
 mongoose
