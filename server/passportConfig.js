@@ -8,13 +8,12 @@ passport.use(new GoogleStrategy({
   callbackURL:process.env.callbackURL,
 }, (accessToken, refreshToken, profile, done) => {
   // In real app, you'd save user to DB here
-  return done(null, profile.id);
+  return done(null, profile);
 }));
 
-passport.serializeUser((userId, done) => {
-  done(null, userId);
+passport.serializeUser((user, done) => {
+  done(null, user);
 });
-passport.deserializeUser((id, done) => {
-  const fakeUser = { id, name: "Demo", email: "demo@email.com" };
-  done(null, fakeUser);
+passport.deserializeUser((user, done) => {
+  done(null, user);
 });
