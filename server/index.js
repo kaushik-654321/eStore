@@ -31,14 +31,14 @@ app.use(
 );
 app.use(cookieParser());
 app.use(session({
+  name: 'connect.sid',
   secret: 'your-secret',
   resave: false,
   saveUninitialized: false,
-  cookie:{
-    secure: true,
-    sameSite: 'none', 
+  cookie: {
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,
+    secure: true,           // must be true for cross-origin HTTPS
+    sameSite: 'none',       // required for cross-origin
   }
 }));
 app.use(passport.initialize());
