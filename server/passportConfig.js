@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import dotenv from "dotenv";
-import user from "./models/User";
+import User from '../models/User.js';
 dotenv.config();
 
 passport.serializeUser((user, done) => {
@@ -23,16 +23,16 @@ passport.use(new GoogleStrategy({
 }, async (accessToken, refreshToken, profile, done) => {
   try {
     // Find or create the user
-    let User = await user.findOne({ googleId: profile.id });
-    if (!User) {
-      User = await user.create({
+    let user = await User.findOne({ googleId: profile.id });
+    if (!user) {
+      user = await User.create({
         googleId: profile.id,
         name: profile.displayName,
         email: profile.emails && profile.emails[0] && profile.emails[0].value,
         avatar: profile.photos && profile.photos[0] && profile.photos[0].value
       });
     }
-    return done(null, User);
+    return done(null, user);
   } catch (err) {
     return done(err, null);
   }
