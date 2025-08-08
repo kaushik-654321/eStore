@@ -26,7 +26,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const allowedOrigins = [
-  "https://kaushik-654321.github.io", // Your frontend URL
+  "https://estore91.netlify.app", // Your frontend URL
 ]
 app.use(
   cors({

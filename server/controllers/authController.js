@@ -57,7 +57,7 @@ export const OauthUserLoggedIn = async (req, res) => {
 
 export const OauthUserLoggedOut = async (req, res) => {
     req.logout(() => {
-        res.redirect('https://kaushik-654321.github.io');
+        res.redirect('https://estore91.netlify.app');
     });
 }
 

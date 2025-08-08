@@ -27,7 +27,7 @@ userRoutes.get('/auth/google/callback', (req, res, next) => {
   failureRedirect: '/',
 }), (req, res) => {
   console.log("Authenticated user:", req.user);
-  res.redirect('https://kaushik-654321.github.io/eStore/');
+  res.redirect('https://estore91.netlify.app');
 });
 
 
