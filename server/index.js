@@ -22,7 +22,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     secure: true,       // HTTPS only (Netlify & Railway are both HTTPS)
-    sameSite: 'none',   // Allow cross-site cookies
+    sameSite: 'lax',   // Allow cross-site cookies
     httpOnly: true      // Security: prevent JS access
   }
 
