@@ -43,15 +43,8 @@ export const loginusers = async (req, res) => {
 }
 
 export const OauthUserLoggedIn = async (req, res) => {
-    console.log('Request session:', req.session);
-    console.log('Request user:', req.user);
-    if (req.isAuthenticated()) {
-        return res.status(200).json(req.user);
-
-    } else {
-        return res.status(401).json({ message: 'Not logged in' });
-
-    }
+    if (req.user) return res.json({ user: req.user });
+    return res.status(200).json({ user: null });
 }
 
 

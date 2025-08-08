@@ -1,19 +1,49 @@
 import passport from "passport";
-import {Strategy as GoogleStrategy } from  'passport-google-oauth20';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import dotenv from "dotenv";
+import user from "./models/User";
 dotenv.config();
-passport.use(new GoogleStrategy({
-  clientID:process.env.GOOGLE_CLIENT_ID,
-  clientSecret:process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL:process.env.callbackURL,
-}, (accessToken, refreshToken, profile, done) => {
-  // In real app, you'd save user to DB here
-  return done(null, profile);
-}));
 
 passport.serializeUser((user, done) => {
-  done(null, user);
+  done(null, user.id);
 });
-passport.deserializeUser((user, done) => {
-  done(null, user);
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await user.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err, null);
+  }
 });
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: `${process.env.callbackURL}`
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    // Find or create the user
+    let User = await user.findOne({ googleId: profile.id });
+    if (!User) {
+      User = await user.create({
+        googleId: profile.id,
+        name: profile.displayName,
+        email: profile.emails && profile.emails[0] && profile.emails[0].value,
+        avatar: profile.photos && profile.photos[0] && profile.photos[0].value
+      });
+    }
+    return done(null, User);
+  } catch (err) {
+    return done(err, null);
+  }
+}));
+
+// passport.use(new GoogleStrategy({
+//   clientID:process.env.GOOGLE_CLIENT_ID,
+//   clientSecret:process.env.GOOGLE_CLIENT_SECRET,
+//   callbackURL:process.env.callbackURL,
+// }, async(accessToken, refreshToken, profile, done) => {
+//   // In real app, you'd save user to DB here
+//   return done(null, profile);
+// }));
+

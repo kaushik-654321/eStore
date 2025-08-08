@@ -6,6 +6,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import couponRoutes from "./routes/couponRoutes.js";
+import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
 import passport from "passport";
 import session from 'express-session';
@@ -13,23 +14,9 @@ import './passportConfig.js'; // initialize strategies
 
 console.log("Mongo URI:", process.env.MONGO_URI);
 const app = express();
+app.use(express.json());
 app.use(cookieParser());
 // Middleware
-app.use(express.json());
-app.use(session({
-  secret: 'your-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: true,       // HTTPS only (Netlify & Railway are both HTTPS)
-    sameSite: 'lax',   // Allow cross-site cookies
-    httpOnly: true      // Security: prevent JS access
-  }
-
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
 const allowedOrigins = [
   "https://estore91.netlify.app", // Your frontend URL
 ]
@@ -41,14 +28,30 @@ app.use(
     credentials: true, // Allow cookies if needed
   })
 );
+app.use(session({
+  secret: 'your-secret',
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: process.env.MONGO_URI, ttl: 14 * 24 * 60 * 60 }),
+  cookie: {
+    secure: true,       // HTTPS only (Netlify & Railway are both HTTPS)
+    sameSite: 'none',   // Allow cross-site cookies
+    httpOnly: true      // Security: prevent JS access
+  }
 
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+app.use("/api", userRoutes);
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
-app.use("/api", userRoutes);
+
 app.use("/fruits", fruitRoutes);
 app.use("/category", categoryRoutes);
 
