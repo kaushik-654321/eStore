@@ -5,6 +5,9 @@ import { API_ENDPOINTS } from "../api/apiEndpoints";
 import { useCouponStore } from '../app/useCouponStore';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../app/store';
+import { setUser } from '../features/userSlice';
 
 interface modalProps {
   isOpen: boolean,
@@ -20,6 +23,8 @@ interface modalProps {
 }
 
 const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons }) => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [tab, setTab] = useState(0);
   const couponRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -232,6 +237,14 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
                           })
                             .then((res) => res.json())
                             .then((data) => {
+                              const name = data?.name;
+                              const email = data?.email;
+                              const userId = data?.userId;
+                              const token = data?.token
+                              if (!name || !email || !userId || !token) {
+                                throw new Error("Invalid user data from backend");
+                              }
+                              dispatch(setUser({ name, email, userId, token }));
                               console.log("Backend Response:", data);
                               // Optionally close modal after success
                               onClose();
