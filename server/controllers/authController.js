@@ -1,7 +1,8 @@
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
+import { OAuth2Client } from 'google-auth-library';
 
-
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const registeredUser = async (req, res) => {
     try {
@@ -43,8 +44,36 @@ export const loginusers = async (req, res) => {
 }
 
 export const OauthUserLoggedIn = async (req, res) => {
-    if (req.user) return res.json({ user: req.user });
-    return res.status(200).json({ user: null });
+    try {
+        const { token } = req.body;
+        if (!token) return res.status(400).json({ error: "Token missing" });
+
+        // Verify ID token with Google
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+
+        // Check if user exists in DB
+        let user = await User.findOne({ email: payload.email });
+        if (!user) {
+            user = await User.create({
+                name: payload.name,
+                email: payload.email,
+                picture: payload.picture,
+            });
+        }
+
+        // Create session
+        req.session.userId = user._id;
+
+        res.json({ user });
+    } catch (error) {
+        console.error("Google auth error:", error);
+        res.status(401).json({ error: "Invalid Google token" });
+    }
 }
 
 

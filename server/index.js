@@ -10,9 +10,6 @@ import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
 import passport from "passport";
 import session from 'express-session';
-import './passportConfig.js'; // initialize strategies
-
-console.log("Mongo URI:", process.env.MONGO_URI);
 const app = express();
 app.use(express.json());
 app.use(cookieParser());

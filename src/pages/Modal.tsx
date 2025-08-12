@@ -3,6 +3,8 @@ import FormPage from './Form';
 import { fetchData } from '../services/api';
 import { API_ENDPOINTS } from "../api/apiEndpoints";
 import { useCouponStore } from '../app/useCouponStore';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
 
 interface modalProps {
   isOpen: boolean,
@@ -214,10 +216,37 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
                         ))}
                       </div>
                       <FormPage index={tab} onClose={onClose} />
-                      <button className="btn btn-outline-primary rounded-pill px-4 google-login-btn" onClick={handleLogin}>
+                      <GoogleLogin
+                        onSuccess={(credentialResponse) => {
+                          if (!credentialResponse.credential) return;
+
+                          const token = credentialResponse.credential;
+                          const decoded: any = jwtDecode(token);
+                          console.log("Google User:", decoded);
+
+                          // Send token to backend for verification
+                          fetch("https://estore-production-4c0c.up.railway.app/api/auth/google", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ token }),
+                          })
+                            .then((res) => res.json())
+                            .then((data) => {
+                              console.log("Backend Response:", data);
+                              // Optionally close modal after success
+                              onClose();
+                            })
+                            .catch((err) => console.error("Login error:", err));
+                        }}
+                        onError={() => {
+                          console.log("Google Login Failed");
+                        }}
+                        useOneTap
+                      />
+                      {/* <button className="btn btn-outline-primary rounded-pill px-4 google-login-btn" onClick={handleLogin}>
                          <i className="bi bi-google me-2"></i> 
                          Login with Google
-                      </button>
+                      </button> */}
                     </>
                   )}
               </div>
