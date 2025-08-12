@@ -44,36 +44,37 @@ export const loginusers = async (req, res) => {
 }
 
 export const OauthUserLoggedIn = async (req, res) => {
+    
     try {
-        const { token } = req.body;
-        if (!token) return res.status(400).json({ error: "Token missing" });
+    const { token } = req.body;
+    if (!token) return res.status(400).json({ error: "Token missing" });
 
-        // Verify ID token with Google
-        const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: process.env.GOOGLE_CLIENT_ID,
-        });
+    // Verify ID token with Google
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
 
-        const payload = ticket.getPayload();
+    const payload = ticket.getPayload();
 
-        // Check if user exists in DB
-        let user = await User.findOne({ email: payload.email });
-        if (!user) {
-            user = await User.create({
-                name: payload.name,
-                email: payload.email,
-                picture: payload.picture,
-            });
-        }
-
-        // Create session
-        req.session.userId = user._id;
-
-        res.json({ user });
-    } catch (error) {
-        console.error("Google auth error:", error);
-        res.status(401).json({ error: "Invalid Google token" });
+    // Check if user exists in DB
+    let user = await User.findOne({ email: payload.email });
+    if (!user) {
+      user = await User.create({
+        name: payload.name,
+        email: payload.email,
+        picture: payload.picture,
+      });
     }
+
+    // Create session
+    req.session.userId = user._id;
+    return res.status(200).json({ token, name: user.fullName, email: user.email, userId: user.id, message: 'Login Successfull' })
+    
+  } catch (error) {
+    console.error("Google auth error:", error);
+    res.status(401).json({ error: "Invalid Google token" });
+  }
 }
 
 
