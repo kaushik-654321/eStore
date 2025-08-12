@@ -69,7 +69,6 @@ export const OauthUserLoggedIn = async (req, res) => {
 
         // Create session
         req.session.userId = user._id;
-        console.log("User logged in:", user.fullName);
         return res.status(200).json({ token, name: user.fullName, email: user.email, userId: user._id, message: 'Login Successfull' })
 
     } catch (error) {
@@ -80,8 +79,21 @@ export const OauthUserLoggedIn = async (req, res) => {
 
 
 export const OauthUserLoggedOut = async (req, res) => {
-    req.logout(() => {
-        res.redirect('https://estore91.netlify.app');
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Logout error:", err);
+            return res.status(500).json({ error: "Logout failed" });
+        }
+
+        // Clear cookie (name is usually "connect.sid")
+        // res.clearCookie("connect.sid", {
+        //     path: "/",
+        //     httpOnly: true,
+        //     secure: true,
+        //     sameSite: "none"
+        // });
+
+        res.json({ message: "Logged out successfully" });
     });
 }
 

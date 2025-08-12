@@ -44,6 +44,17 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   const handleLogout = () => {
     // Clear auth logic here
     console.log("Logout clicked");
+    fetch("https://estore-production-4c0c.up.railway.app/api/auth/logout", {
+      method: "POST",
+      credentials: "include", // important to send the session cookie
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.message); // "Logged out successfully"
+        // Clear local auth state
+        // e.g., setUser(null) or dispatch logout action
+      })
+      .catch((err) => console.error("Logout error:", err));
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("token");
     persistor.purge();

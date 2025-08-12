@@ -245,7 +245,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
                                 throw new Error("Invalid user data from backend");
                               }
                               dispatch(setUser({ name, email, userId, token }));
-                              console.log("Backend Response:", data);
+                           
                               // Optionally close modal after success
                               onClose();
                             })
