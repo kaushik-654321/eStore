@@ -69,6 +69,7 @@ export const OauthUserLoggedIn = async (req, res) => {
 
         // Create session
         req.session.userId = user._id;
+        console.log("User logged in:", user);
         return res.status(200).json({ token, name: user.fullName, email: user.email, userId: user._id, message: 'Login Successfull' })
 
     } catch (error) {
