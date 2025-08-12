@@ -57,15 +57,28 @@ export const OauthUserLoggedIn = async (req, res) => {
         });
 
         const payload = ticket.getPayload();
-
-        // Check if user exists in DB
-        let user = await User.findOne({ email: payload.email });
+        const googleId = payload.sub;
+        if (!googleId) {
+            return res.status(400).json({ error: "Invalid Google payload" });
+        }
+        let user = await User.findOne({ googleId });
         if (!user) {
-            user = await User.create({
-                fullName: payload.name,
-                email: payload.email,
-                picture: payload.picture,
-            });
+            // If not found, check if the email already exists (merge accounts)
+            user = await User.findOne({ email: payload.email });
+            if (user) {
+                // Link existing account to Google
+                user.googleId = googleId;
+                user.picture = payload.picture;
+                await user.save();
+            } else {
+                // Create new Google user
+                user = await User.create({
+                    fullName: payload.name,
+                    email: payload.email,
+                    picture: payload.picture,
+                    googleId: googleId
+                });
+            }
         }
 
         // Create session
