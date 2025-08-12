@@ -6,10 +6,10 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const registeredUser = async (req, res) => {
     try {
-        const { name: fullName, email, mobile, password } = req.body;
+        const { name: fullName, email, password } = req.body;
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'user already exists' });
-        const user = await User.create({ fullName, email, mobile, password });
+        const user = await User.create({ fullName, email, password });
         if (user) {
             return res.status(201).json({ name: user.fullName, email: user.email, userId: user.id, message: 'User registered successfully' });
         }
