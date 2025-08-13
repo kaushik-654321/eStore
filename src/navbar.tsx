@@ -23,7 +23,7 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   useEffect(() => {
     if (userId) {
       dispatch(setUser(savedUser));
-      // dispatch(fetchUserCart({ userId, token }))
+      dispatch(fetchUserCart({ userId, token }))
     }
     const handleClickOutside = (event: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {

@@ -57,11 +57,14 @@ const FormPage: React.FC<PropTypes> = ({ index, onClose }) => {
                     dispatch(addToCartServer({ userId, cartItems: prevCart }));
                     persistor.purge();
                 }
-                else{
-                    dispatch(fetchUserCart({ userId: data.userId, token: data.token }));
+                else {
+                    if (endpoint === "/login") {
+                        dispatch(fetchUserCart({ userId: data.userId, token: data.token }));
+                    }
+
                 }
-               
-                
+
+
                 // sessionStorage.setItem("user", JSON.stringify({
                 //     name: data.name,
                 //     email: data.email,
