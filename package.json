@@ -2,6 +2,7 @@
   "name": "codespaces-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://kaushik-654321.github.io/eStore",
   "dependencies": {
     "@apollo/client": "^3.13.1",
     "@react-oauth/google": "^0.12.2",
