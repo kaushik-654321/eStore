@@ -6,6 +6,7 @@ import { AppDispatch, persistor, RootState } from "./app/store"
 import { clearUser, setUser } from "./features/userSlice";
 import { clearCart, fetchUserCart } from "./features/cartSlice";
 import { checkActivity } from "./utils/updateActivity";
+import { API_ENDPOINTS } from "./api/apiEndpoints";
 
 type navProps = {
   onUserIconClick: () => void
@@ -44,7 +45,7 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   const handleLogout = () => {
     // Clear auth logic here
     console.log("Logout clicked");
-    fetch("https://estore-production-4c0c.up.railway.app/api/auth/logout", {
+    fetch(`${API_ENDPOINTS.USER.api}/logout`, {
       method: "POST",
       credentials: "include", // important to send the session cookie
     })

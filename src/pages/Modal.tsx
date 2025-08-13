@@ -161,13 +161,6 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
     );
   };
 
-  const handleLogin = () => {
-    window.open(
-      'https://estore-production-4c0c.up.railway.app/api/auth/google',
-      '_self'
-    );
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -230,7 +223,7 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
                           console.log("Google User:", decoded);
 
                           // Send token to backend for verification
-                          fetch("https://estore-production-4c0c.up.railway.app/api/auth/google", {
+                          fetch(`${API_ENDPOINTS.USER.api}/google`, {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({ token }),
