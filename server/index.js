@@ -6,6 +6,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import couponRoutes from "./routes/couponRoutes.js";
+import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
 import passport from "passport";
 import session from 'express-session';
@@ -24,7 +25,17 @@ app.use(
     credentials: true, // Allow cookies if needed
   })
 );
+app.use(session({
+  secret: 'your-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: true,       // HTTPS only (Netlify & Railway are both HTTPS)
+    sameSite: 'none',   // Allow cross-site cookies
+    httpOnly: true      // Security: prevent JS access
+  }
 
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
