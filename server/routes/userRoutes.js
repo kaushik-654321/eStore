@@ -44,10 +44,11 @@ userRoutes.get("/auth/google/callback", async (req, res) => {
     const tokens = await tokenRes.json();
 
     // Fetch user info
-    const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+    const userRes = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
         headers: { Authorization: `Bearer ${tokens.access_token}` }
     });
     const user = await userRes.json();
+    console.log("User info:", user);
     const tempToken = jwt.sign(user, 'kau12', { expiresIn: "1m" });
 
     // Store user in DB here (find or create)
