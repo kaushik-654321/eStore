@@ -42,6 +42,7 @@ const Home: React.FC = () => {
           const token = data?.token;
 
           dispatch(setUser({ name, email, userId, token }));
+          navigate('/'); // Redirect to home page after login
           console.log('✅ Logged in user:', data);
           // setUser(userObj);
         })
