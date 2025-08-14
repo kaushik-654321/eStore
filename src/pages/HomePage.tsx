@@ -16,35 +16,39 @@ import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
-     const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
-     if (token) {
+    if (token) {
       console.log('Token found:', token);
-     }
-    // fetch(`${API_ENDPOINTS.USER.user}`, {
-    //   method: 'GET',
-    //   credentials: 'include', // 👈 Important to send session cookie
-    // })
-    //   .then((res) => {
-    //     if (!res.ok) throw new Error('Not logged in');
-    //     return res.json();
-    //   })
-    //   .then((data) => {
-    //     const name = data?._json.name;
-    //     const email = data?._json.email;
-    //     const userId = data?.id;
-    //     const token = data?.id
 
-    //     dispatch(setUser({ name, email, userId, token }));
-    //     console.log('✅ Logged in user:', data);
-    //     // setUser(userObj);
-    //   })
-    //   .catch((err) => {
-    //     console.log('❌ Not logged in');
-    //   });
+
+      fetch(`${API_ENDPOINTS.USER.user}`, {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+        credentials: 'include',
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error('Not logged in');
+          return res.json();
+        })
+        .then((data) => {
+          // const name = data?._json.name;
+          // const email = data?._json.email;
+          // const userId = data?.id;
+          // const token = data?.id
+
+          // dispatch(setUser({ name, email, userId, token }));
+          console.log('✅ Logged in user:', data);
+          // setUser(userObj);
+        })
+        .catch((err) => {
+          console.log('❌ Not logged in');
+        });
+    }
   }, [])
 
   return (
