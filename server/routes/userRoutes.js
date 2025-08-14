@@ -2,7 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import jwt from "jsonwebtoken";
 import { registeredUser, loginusers, OauthUserLoggedIn, OauthUserLoggedOut } from '../controllers/authController.js';
-import User from '../models/userModel.js'; // Assuming you have a User model defined
+import User from '../models/User.js'; // Assuming you have a User model defined
 const userRoutes = express.Router();
 
 userRoutes.get("/auth/google", (req, res) => {
