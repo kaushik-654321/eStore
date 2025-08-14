@@ -25,7 +25,7 @@ userRoutes.get("/auth/google", (req, res) => {
   res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`);
 });
 
-app.get("/auth/google/callback", async (req, res) => {
+userRoutes.get("/auth/google/callback", async (req, res) => {
   const code = req.query.code;
 
   // Exchange code for tokens
@@ -56,7 +56,7 @@ app.get("/auth/google/callback", async (req, res) => {
   res.redirect(`https://kaushik-654321.github.io/eStore`);
 });
 
-app.get("/me", (req, res) => {
+userRoutes.get("/me", (req, res) => {
   if (req.session.user) {
     res.json(req.session.user);
   } else {
