@@ -56,7 +56,7 @@ userRoutes.get("/auth/google/callback", async (req, res) => {
   res.redirect(`https://kaushik-654321.github.io/eStore`);
 });
 
-userRoutes.get("/me", (req, res) => {
+userRoutes.get("/user", (req, res) => {
   if (req.session.user) {
     res.json(req.session.user);
   } else {
