@@ -28,6 +28,8 @@ app.set("trust proxy", 1);
 app.use(session({
   name: "session",
   secret: 'your-secret',
+  resave: false,
+  saveUninitialized: false,
   keys: [process.env.SESSION_SECRET],
   maxAge: 24 * 60 * 60 * 1000,
   sameSite: "none",  // Required for cross-site cookies
