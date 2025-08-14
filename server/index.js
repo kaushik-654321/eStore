@@ -6,7 +6,6 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import couponRoutes from "./routes/couponRoutes.js";
-import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
 import passport from "passport";
 import session from 'express-session';

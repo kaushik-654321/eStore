@@ -37,6 +37,9 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
     { label: 'Signup', index: 1, className: 'signup-tab' },
   ];
 
+  const handleLogin = () => {
+    window.location.href = "https://estore-production-4c0c.up.railway.app/api/auth/google";
+  };
   // 💡 Lock scroll and focus input when modal opens
   useEffect(() => {
     if (!isOpen || !modalRef.current) return;
@@ -249,10 +252,10 @@ const ModalPage: React.FC<modalProps> = ({ isOpen, onClose, isCoupon, coupons })
                         }}
                         useOneTap
                       />
-                      {/* <button className="btn btn-outline-primary rounded-pill px-4 google-login-btn" onClick={handleLogin}>
+                      <button className="btn btn-outline-primary rounded-pill px-4 google-login-btn" onClick={handleLogin}>
                          <i className="bi bi-google me-2"></i> 
                          Login with Google
-                      </button> */}
+                      </button>
                     </>
                   )}
               </div>
