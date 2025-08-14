@@ -42,7 +42,6 @@ const Home: React.FC = () => {
           const token = data?.token;
 
           dispatch(setUser({ name, email, userId, token }));
-          navigate('https://kaushik-654321.github.io/eStore/'); // Redirect to home page after login
           console.log('✅ Logged in user:', data);
           // setUser(userObj);
         })
