@@ -2,7 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import jwt from "jsonwebtoken";
 import { registeredUser, loginusers, OauthUserLoggedIn, OauthUserLoggedOut } from '../controllers/authController.js';
-
+import User from '../models/userModel.js'; // Assuming you have a User model defined
 const userRoutes = express.Router();
 
 userRoutes.get("/auth/google", (req, res) => {
@@ -47,12 +47,31 @@ userRoutes.get("/auth/google/callback", async (req, res) => {
     const userRes = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
         headers: { Authorization: `Bearer ${tokens.access_token}` }
     });
-    const user = await userRes.json();
-    console.log("User info:", user);
+    const payload = await userRes.json();
+    const googleId = payload.sub;
+    if (!googleId) {
+        return res.status(400).json({ error: "Invalid Google payload" });
+    }
+    let user = await User.findOne({ googleId });
+    if (!user) {
+         user = await User.findOne({ email: payload.email });
+         if (user) {
+                // Link existing account to Google
+                user.googleId = googleId;
+                user.picture = payload.picture;
+                await user.save();
+            } else {
+                // Create new Google user
+                user = await User.create({
+                    fullName: payload.name,
+                    email: payload.email,
+                    picture: payload.picture,
+                    googleId: googleId
+                });
+            }
+    }
+    
     const tempToken = jwt.sign(user, 'kau12', { expiresIn: "1m" });
-
-    // Store user in DB here (find or create)
-    req.session.user = user;
 
     // Redirect to frontend
     res.redirect(`https://kaushik-654321.github.io/eStore?token=${tempToken}`);
@@ -63,7 +82,7 @@ userRoutes.post("/user", (req, res) => {
     req.session.user = decodedUser;
     console.log("Session set for user:", decodedUser);
     res.json({ message: "Session set" });
-    
+
 });
 
 // userRoutes.post('/auth/login', loginusers);
