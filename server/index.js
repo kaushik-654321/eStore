@@ -24,17 +24,25 @@ app.use(
     credentials: true, // Allow cookies if needed
   })
 );
+app.set("trust proxy", 1);
 app.use(session({
-  secret: 'your-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: true,       // HTTPS only (Netlify & Railway are both HTTPS)
-    sameSite: 'none',   // Allow cross-site cookies
-    httpOnly: true      // Security: prevent JS access
-  }
-
+  name: "session",
+  keys: [process.env.SESSION_SECRET],
+  maxAge: 24 * 60 * 60 * 1000,
+  sameSite: "none",  // Required for cross-site cookies
+  secure: true       // Required because Railway uses HTTPS
 }));
+// app.use(session({
+//   secret: 'your-secret',
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: {
+//     secure: true,       // HTTPS only (Netlify & Railway are both HTTPS)
+//     sameSite: 'none',   // Allow cross-site cookies
+//     httpOnly: true      // Security: prevent JS access
+//   }
+
+// }));
 app.use(passport.initialize());
 app.use(passport.session());
 

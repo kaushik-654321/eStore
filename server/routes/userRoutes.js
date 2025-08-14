@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-
+import jwt from "jsonwebtoken";
 import { registeredUser, loginusers, OauthUserLoggedIn, OauthUserLoggedOut } from '../controllers/authController.js';
 
 const userRoutes = express.Router();
@@ -48,12 +48,13 @@ userRoutes.get("/auth/google/callback", async (req, res) => {
     headers: { Authorization: `Bearer ${tokens.access_token}` }
   });
   const user = await userRes.json();
+  const tempToken = jwt.sign(user, process.env.SESSION_SECRET, { expiresIn: "1m" });
 
   // Store user in DB here (find or create)
   req.session.user = user;
 
   // Redirect to frontend
-  res.redirect(`https://kaushik-654321.github.io/eStore`);
+  res.redirect(`https://kaushik-654321.github.io/eStore?token=${tempToken}`);
 });
 
 userRoutes.get("/user", (req, res) => {

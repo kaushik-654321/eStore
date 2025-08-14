@@ -12,33 +12,39 @@ import { API_ENDPOINTS } from '../api/apiEndpoints';
 import { setUser } from '../features/userSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../app/store';
-
+import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${API_ENDPOINTS.USER.user}`, {
-      method: 'GET',
-      credentials: 'include', // 👈 Important to send session cookie
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error('Not logged in');
-        return res.json();
-      })
-      .then((data) => {
-        const name = data?._json.name;
-        const email = data?._json.email;
-        const userId = data?.id;
-        const token = data?.id
+     const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+     if (token) {
+      console.log('Token found:', token);
+     }
+    // fetch(`${API_ENDPOINTS.USER.user}`, {
+    //   method: 'GET',
+    //   credentials: 'include', // 👈 Important to send session cookie
+    // })
+    //   .then((res) => {
+    //     if (!res.ok) throw new Error('Not logged in');
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     const name = data?._json.name;
+    //     const email = data?._json.email;
+    //     const userId = data?.id;
+    //     const token = data?.id
 
-        dispatch(setUser({ name, email, userId, token }));
-        console.log('✅ Logged in user:', data);
-        // setUser(userObj);
-      })
-      .catch((err) => {
-        console.log('❌ Not logged in');
-      });
+    //     dispatch(setUser({ name, email, userId, token }));
+    //     console.log('✅ Logged in user:', data);
+    //     // setUser(userObj);
+    //   })
+    //   .catch((err) => {
+    //     console.log('❌ Not logged in');
+    //   });
   }, [])
 
   return (
