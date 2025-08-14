@@ -36,12 +36,12 @@ const Home: React.FC = () => {
           return res.json();
         })
         .then((data) => {
-          // const name = data?._json.name;
-          // const email = data?._json.email;
-          // const userId = data?.id;
-          // const token = data?.id
+          const name = data?.name;
+          const email = data?.email;
+          const userId = data?.userId;
+          const token = data?.token;
 
-          // dispatch(setUser({ name, email, userId, token }));
+          dispatch(setUser({ name, email, userId, token }));
           console.log('✅ Logged in user:', data);
           // setUser(userObj);
         })
