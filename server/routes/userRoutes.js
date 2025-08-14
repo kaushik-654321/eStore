@@ -54,24 +54,31 @@ userRoutes.get("/auth/google/callback", async (req, res) => {
     }
     let user = await User.findOne({ googleId });
     if (!user) {
-         user = await User.findOne({ email: payload.email });
-         if (user) {
-                // Link existing account to Google
-                user.googleId = googleId;
-                user.picture = payload.picture;
-                await user.save();
-            } else {
-                // Create new Google user
-                user = await User.create({
-                    fullName: payload.name,
-                    email: payload.email,
-                    picture: payload.picture,
-                    googleId: googleId
-                });
-            }
+        user = await User.findOne({ email: payload.email });
+        if (user) {
+            // Link existing account to Google
+            user.googleId = googleId;
+            user.picture = payload.picture;
+            await user.save();
+        } else {
+            // Create new Google user
+            user = await User.create({
+                fullName: payload.name,
+                email: payload.email,
+                picture: payload.picture,
+                googleId: googleId
+            });
+        }
     }
-    
-    const tempToken = jwt.sign(user, 'kau12', { expiresIn: "1m" });
+    let userObj = {
+        name: user.fullName,
+        email: user.email,
+        userId: user._id,
+        token: user.googleId
+    }
+    console.log("User logged in:", userObj);
+    console.log("User session:", user);
+    const tempToken = jwt.sign(userObj, 'kau12', { expiresIn: "1m" });
 
     // Redirect to frontend
     res.redirect(`https://kaushik-654321.github.io/eStore?token=${tempToken}`);
