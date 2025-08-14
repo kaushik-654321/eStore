@@ -48,7 +48,7 @@ userRoutes.get("/auth/google/callback", async (req, res) => {
     headers: { Authorization: `Bearer ${tokens.access_token}` }
   });
   const user = await userRes.json();
-  const tempToken = jwt.sign(user, process.env.SESSION_SECRET, { expiresIn: "1m" });
+  const tempToken = jwt.sign(user, 'kau12', { expiresIn: "1m" });
 
   // Store user in DB here (find or create)
   req.session.user = user;
