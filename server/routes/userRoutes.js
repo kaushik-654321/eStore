@@ -76,8 +76,7 @@ userRoutes.get("/auth/google/callback", async (req, res) => {
         userId: user._id,
         token: user.googleId
     }
-    console.log("User logged in:", userObj);
-    console.log("User session:", user);
+
     const tempToken = jwt.sign(userObj, 'kau12', { expiresIn: "1m" });
 
     // Redirect to frontend
@@ -85,11 +84,10 @@ userRoutes.get("/auth/google/callback", async (req, res) => {
 });
 
 userRoutes.post("/user", (req, res) => {
-    const decodedUser = jwt.verify(req.body.token, 'kau12');
-    req.session.user = decodedUser;
-    console.log("Session set for user:", decodedUser);
-    res.json({ message: "Session set" });
-
+    const user = jwt.verify(req.body.token, 'kau12');
+    req.session.user = user;
+    console.log("Session set for user:", user);
+    return res.status(200).json({ token: user.token, name: user.name, email: user.email, userId: user.userId, message: 'Login Successfull' })
 });
 
 // userRoutes.post('/auth/login', loginusers);
