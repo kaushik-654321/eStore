@@ -5,6 +5,8 @@ import { registeredUser, loginusers, OauthUserLoggedIn, OauthUserLoggedOut } fro
 import User from '../models/User.js'; // Assuming you have a User model defined
 const userRoutes = express.Router();
 
+
+
 userRoutes.get("/auth/google", (req, res) => {
     const redirect_uri = "https://estore-production-4c0c.up.railway.app/api/auth/google/callback";
     const scope = [
@@ -90,8 +92,8 @@ userRoutes.post("/user", (req, res) => {
     return res.status(200).json({ token: user.token, name: user.name, email: user.email, userId: user.userId, message: 'Login Successfull' })
 });
 
-// userRoutes.post('/auth/login', loginusers);
-// userRoutes.post('/auth/signup', registeredUser);
+userRoutes.post('/auth/login', loginusers);
+userRoutes.post('/auth/signup', registeredUser);
 // userRoutes.post("/auth/google", OauthUserLoggedIn)
 // userRoutes.post("/auth/logout", OauthUserLoggedOut)
 
