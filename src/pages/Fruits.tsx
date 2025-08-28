@@ -1,5 +1,5 @@
 import React from 'react';
-import { addToCart, addToCartServer, fetchUserCart } from '../features/cartSlice';
+import { addToCart, addToCartServer, fetchUserCart, rollbackCart } from '../features/cartSlice';
 import { AppDispatch, RootState } from '../app/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { Items } from '../types/item.type';
@@ -17,7 +17,12 @@ const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits })
     const { userId } = userObj
     const ItemaddTocart = (Itemdata: Items) => {
         if (userId) {
-            dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }));
+            // dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }));
+            dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] })).unwrap()
+                .catch(() => {
+                    // Step 3: Rollback if server fails
+                    dispatch(rollbackCart({ _id: Itemdata._id }));
+                });
             // dispatch(fetchUserCart(userId));
         }
         else {
@@ -32,7 +37,7 @@ const FruitsComponent: React.FC<FruitsComponentProps> = ({ fruitsData: fruits })
         fruits?.map(fruit => (
             <div key={fruit._id} className="col-md-6 col-lg-6 col-xl-4">
                 <div className="rounded position-relative fruite-item">
-                    <div className="fruite-img" style={{height:'160px'}}>
+                    <div className="fruite-img" style={{ height: '160px' }}>
                         <img
                             src={fruit.image}
                             className="img-fluid w-100 rounded-top"
