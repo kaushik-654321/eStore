@@ -41,6 +41,7 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   useLayoutEffect(() => {
     const handleResize = () => setWidth(window.screen.width);
     window.addEventListener('resize', handleResize);
+
     return () => window.removeEventListener('resize', handleResize)
   }, [window.screen.width])
 
@@ -177,12 +178,12 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
 
                 {showProfile && (
                   <div
-                    className="dropdown-menu dropdown-menu-end show"
+                    className="position-absolute bg-white border rounded shadow-sm"
                     style={{
                       top: "40px",
                       zIndex: 1000,
                       minWidth: "150px",
-                      right: 0
+                      right: width > 600 ? "0" : "-40px"
                     }}
                   >
                     <div className="p-2 border-bottom text-dark">{userName}</div>
