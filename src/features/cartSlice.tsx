@@ -13,6 +13,7 @@ const initialState: Partial<cartState> = {
 
 
 
+
 // Fetch cart from server
 export const fetchUserCart = createAsyncThunk<Items[], fetchUserCartPayload>(
     'cart/fetchUserCart',
@@ -77,7 +78,7 @@ const cartSlice = createSlice({
             }
             state.cartTotal = calculateCartTotal(state.items);
             state.cartCount = caclulateCartCount(state.items);
-            
+
 
         },
         removeCart: (state, action: PayloadAction<{ _id: string }>) => {
@@ -101,7 +102,13 @@ const cartSlice = createSlice({
             state.items = [];
             state.cartTotal = null;
             state.cartCount = null;
+        },
+        rollbackCart: (state, action: PayloadAction<{ _id: string }>) => {
+            state.items = state.items.filter(item => item._id !== action.payload._id);
+            state.cartTotal = calculateCartTotal(state.items);
+            state.cartCount = caclulateCartCount(state.items);
         }
+
     },
     extraReducers: (builder) => {
         builder.addCase(fetchUserCart.fulfilled, (state, action) => {
@@ -110,9 +117,7 @@ const cartSlice = createSlice({
             state.cartCount = caclulateCartCount(state.items);
         })
         builder.addCase(addToCartServer.fulfilled, (state, action) => {
-            state.items = action.payload;
-            state.cartTotal = calculateCartTotal(state.items);
-            state.cartCount = caclulateCartCount(state.items);
+
         })
         builder.addCase(updateCartServer.fulfilled, (state, action) => {
             state.items = action.payload;
@@ -126,5 +131,5 @@ const cartSlice = createSlice({
         })
     }
 });
-export const { addToCart, removeCart, updateQuantity, clearCart } = cartSlice.actions;
+export const { addToCart, removeCart, updateQuantity, clearCart, rollbackCart } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
-import { addToCart, updateQuantity, removeCart, addToCartServer, updateCartServer, removeCartServer } from '../features/cartSlice';
+import { addToCart, updateQuantity, removeCart, addToCartServer, updateCartServer, removeCartServer, rollbackCart } from '../features/cartSlice';
 import { Items } from '../types/item.type';
 import { PageHeader } from './PageHeader';
 import { NormalizeCartItem } from '../utils/cartNormalizer';
@@ -75,7 +75,11 @@ function CartPage() {
 
     const ItemaddTocart = (Itemdata: Items) => {
         if (isAuthenticated) {
-            dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }))
+            dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] })).unwrap()
+                .catch(() => {
+                    // Step 3: Rollback if server fails
+                    dispatch(rollbackCart({ _id: Itemdata._id }));
+                });
         }
         else {
             dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
