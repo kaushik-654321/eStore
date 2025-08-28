@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import Header from "./pages/Header";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +14,7 @@ type navProps = {
 
 const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   const [expand, setExpand] = useState<boolean>(false);
+  const [width, setWidth] = useState<number>(window.innerWidth);
   const cartCount = useSelector((state: RootState) => state.cart?.cartCount);
   const [showProfile, setShowProfile] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -37,6 +38,9 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
     };
   }, [])
 
+  useLayoutEffect(() => {
+    setWidth(window.innerWidth);
+  }, [window.innerWidth])
 
   const toggleProfile = () => {
     setShowProfile((prev) => !prev);
@@ -172,7 +176,7 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
                 {showProfile && (
                   <div
                     className="position-absolute bg-white border rounded shadow-sm"
-                    style={{ top: "40px", right: "0", zIndex: 1000, minWidth: "150px" }}
+                    style={width < 600 ? { top: "40px", right: "0", zIndex: 1000, minWidth: "150px" } : { top: "40px", right: "-40px", zIndex: 1000, minWidth: "150px" }}
                   >
                     <div className="p-2 border-bottom text-dark">{userName}</div>
                     <button
