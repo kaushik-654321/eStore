@@ -5,7 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
 import { Items, tabContentData, tabDataType } from '../types/item.type';
-import { addToCart, addToCartServer, rollbackCart } from '../features/cartSlice';
+import { addToCart, addToCartServer } from '../features/cartSlice';
 import { updateActivity } from '../utils/updateActivity';
 
 
@@ -69,13 +69,8 @@ const FruitsShop: React.FC = () => {
 
     const ItemaddTocart = (Itemdata: Items) => {
         if (userId) {
-            // dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }));
-            dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] })).unwrap()
-                .catch(() => {
-                    // Step 3: Rollback if server fails
-                    dispatch(rollbackCart({ _id: Itemdata._id }));
-                });
-        }
+            dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }));
+         }
         else {
             dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
             updateActivity();
@@ -121,7 +116,7 @@ const FruitsShop: React.FC = () => {
                                             {visibleItems.map((data) => (
                                                 <div className="col-md-6 col-lg-4 col-xl-3">
                                                     <div className="rounded position-relative fruite-item">
-                                                        <div className="fruite-img" style={{ height: '160px' }}>
+                                                        <div className="fruite-img" style={{height:'160px'}}>
                                                             <img src={data.image} className="img-fluid w-100 rounded-top" alt="fruite-item" />
                                                         </div>
                                                         <div className="text-white bg-secondary px-3 py-1 rounded position-absolute" style={{ top: "10px", left: "10px" }}>{data.category}</div>
