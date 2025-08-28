@@ -179,7 +179,12 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
                 {showProfile && (
                   <div
                     className="position-absolute bg-white border rounded shadow-sm"
-                    style={width < 600 ? { top: "40px", right: "0", zIndex: 1000, minWidth: "150px" } : { top: "40px", right: "-40px", zIndex: 1000, minWidth: "150px" }}
+                    style={{
+                      top: "40px",
+                      zIndex: 1000,
+                      minWidth: "150px",
+                      right: width > 600 ? "0" : "-40px"
+                    }}
                   >
                     <div className="p-2 border-bottom text-dark">{userName}</div>
                     <button
