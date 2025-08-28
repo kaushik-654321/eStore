@@ -43,7 +43,7 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
     window.addEventListener('resize', handleResize);
     alert(width);
     return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  }, [window.screen.width])
 
   const toggleProfile = () => {
     setShowProfile((prev) => !prev);
