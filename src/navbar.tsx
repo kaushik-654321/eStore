@@ -39,8 +39,11 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   }, [])
 
   useLayoutEffect(() => {
-    setWidth(window.innerWidth);
-  }, [window.innerWidth])
+    const handleResize = () => setWidth(window.screen.width);
+    window.addEventListener('resize', handleResize);
+    alert(width);
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const toggleProfile = () => {
     setShowProfile((prev) => !prev);
