@@ -177,12 +177,12 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
 
                 {showProfile && (
                   <div
-                    className="position-absolute bg-white border rounded shadow-sm"
+                    className="dropdown-menu dropdown-menu-end show"
                     style={{
                       top: "40px",
                       zIndex: 1000,
                       minWidth: "150px",
-                      right: width > 600 ? "0" : "-40px"
+                      right: 0
                     }}
                   >
                     <div className="p-2 border-bottom text-dark">{userName}</div>
