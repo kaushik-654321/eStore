@@ -75,6 +75,7 @@ function CartPage() {
 
     const ItemaddTocart = (Itemdata: Items) => {
         if (isAuthenticated) {
+           dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
             dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] })).unwrap()
                 .catch(() => {
                     // Step 3: Rollback if server fails
