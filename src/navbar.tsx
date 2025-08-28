@@ -41,7 +41,6 @@ const Navbar: React.FC<navProps> = ({ onUserIconClick }) => {
   useLayoutEffect(() => {
     const handleResize = () => setWidth(window.screen.width);
     window.addEventListener('resize', handleResize);
-    alert(width);
     return () => window.removeEventListener('resize', handleResize)
   }, [window.screen.width])
 
