@@ -8,7 +8,7 @@ import { useCouponStore } from '../app/useCouponStore';
 
 export const CheckoutPage = () => {
     const cartItems = useSelector((state: RootState) => state.cart.items);
-    const normalizedCartItems: Items[] = NormalizeCartItem(cartItems);
+    const normalizedCartItems: Items[] = cartItems;
     // console.log(normalizedCartItems);
     const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
     const { selectedCoupon } = useCouponStore();

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch, RootState } from '../app/store';
+import { AppDispatch, RootState, store } from '../app/store';
 import { addToCart, updateQuantity, removeCart, addToCartServer, updateCartServer, removeCartServer, rollbackCart } from '../features/cartSlice';
 import { Items } from '../types/item.type';
 import { PageHeader } from './PageHeader';
@@ -12,6 +12,7 @@ import ModalPage from './Modal';
 import { withModal } from '../components/HOC/withModal';
 import { useCouponStore } from '../app/useCouponStore';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 const CouponModal = withModal(ModalPage);
@@ -30,7 +31,7 @@ function CartPage() {
     const [couponData, setCouponData] = useState<coupons[]>([]);
     const dispatch = useDispatch<AppDispatch>();
     const cartItems = useSelector((state: RootState) => state.cart.items);
-    const normalizedCartItems: Items[] = NormalizeCartItem(cartItems);
+    const normalizedCartItems: Items[] = cartItems;
     // console.log("normalizedCartItems", normalizedCartItems);
 
     const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
@@ -74,13 +75,16 @@ function CartPage() {
     }, [showModal])
 
     const ItemaddTocart = (Itemdata: Items) => {
+        const prevCart = store.getState().cart.items; // Get current cart state for rollback
         if (isAuthenticated) {
-           dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
-            // dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] })).unwrap()
-            //     .catch(() => {
-            //         // Step 3: Rollback if server fails
-            //         dispatch(rollbackCart({ _id: Itemdata._id }));
-            //     });
+            dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
+            dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] })).unwrap()
+                .catch(() => {
+                    // Step 3: Rollback if server fails
+                    dispatch(rollbackCart(prevCart));
+                    toast.error("Failed to add cart.");
+                });
+
         }
         else {
             dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
@@ -90,8 +94,15 @@ function CartPage() {
     }
 
     const itemupdatecart = (Itemdata: Items) => {
+        const prevCart = store.getState().cart.items;
         if (isAuthenticated) {
-            dispatch(updateCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] }))
+            console.log(Itemdata);
+            dispatch(updateQuantity({ _id: Itemdata._id, quantity: Itemdata.quantity - 1 }))
+            dispatch(updateCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] })).unwrap().catch(() => {
+                // Step 3: Rollback if server fails
+                dispatch(rollbackCart(prevCart));
+                toast.error("Failed to update cart. Restored previous quantity.");
+            });
         }
         else {
             dispatch(updateQuantity({ _id: Itemdata._id, quantity: Itemdata.quantity - 1 }))
@@ -100,8 +111,14 @@ function CartPage() {
     }
 
     const itemremovecart = (Itemdata: Items) => {
+        const prevCart = store.getState().cart.items; // Get current cart state for rollback
         if (isAuthenticated) {
-            dispatch(removeCartServer({ userId, cartItems: [{ _id: Itemdata._id }] }))
+            dispatch(removeCart({ _id: Itemdata._id }))
+            dispatch(removeCartServer({ userId, cartItems: [{ _id: Itemdata._id }] })).unwrap().catch(() => {
+                // Step 3: Rollback if server fails
+                dispatch(rollbackCart(prevCart));
+                toast.error("Failed to remove cart. Restored previous item.");
+            });
         }
         else {
             dispatch(removeCart({ _id: Itemdata._id }))

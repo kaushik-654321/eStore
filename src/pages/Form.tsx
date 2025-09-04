@@ -6,8 +6,9 @@ import { API_ENDPOINTS } from '../api/apiEndpoints';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../features/userSlice';
-import { addToCartServer, fetchUserCart } from '../features/cartSlice';
+import { addToCartServer, fetchUserCart, syncCart } from '../features/cartSlice';
 import { AppDispatch, persistor, RootState } from '../app/store';
+import { addToCart } from '../../server/controllers/cartController';
 
 type PropTypes = {
     index: number; // 0 = Login, 1 = Signup
@@ -54,7 +55,9 @@ const FormPage: React.FC<PropTypes> = ({ index, onClose }) => {
                 toast.success(`${type === 'login' ? 'Login' : 'Signup'} successful`);
                 dispatch(setUser({ name, email, userId, token }));
                 if (prevCart && prevCart.length > 0) {
-                    dispatch(addToCartServer({ userId, cartItems: prevCart }));
+                    // dispatch(addToCart)
+                    console.log("prevCart", prevCart);
+                    dispatch(addToCartServer({ userId, cartItems: prevCart, sync: true }));
                     persistor.purge();
                 }
                 else {

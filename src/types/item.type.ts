@@ -38,7 +38,8 @@ interface cartItemsInput {
 export interface addToCartPayload {
     userId: string;
     token: string;
-    cartItems: cartItemsInput[]
+    cartItems: cartItemsInput[];
+    sync?: boolean;
 }
 
 export interface tabDataType {

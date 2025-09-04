@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { cartState, Items, fetchUserCartPayload, addToCartPayload } from "../types/item.type";
 import { caclulateCartCount, calculateCartTotal } from "../utils/utility";
-import axios from "axios";
 import { API_ENDPOINTS } from "../api/apiEndpoints";
 import axiosInstance from "../api/axiosInstance";
 
@@ -19,7 +18,9 @@ export const fetchUserCart = createAsyncThunk<Items[], fetchUserCartPayload>(
     'cart/fetchUserCart',
     async ({ userId, token }) => {
         const response = await axiosInstance.get(`${API_ENDPOINTS.CART.api}/${userId}`);
-        return response.data.items as Items[];
+        console.log("fetched cart", response.data);
+        return response.data as Items[];
+        // return response.data.items as Items[];
     }
 )
 
@@ -67,6 +68,12 @@ const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
+        syncCart: (state, action: PayloadAction<Items[]>) => {
+            console.log("sync cart called", action.payload);
+            state.items = action.payload;
+            state.cartTotal = calculateCartTotal(state.items);
+            state.cartCount = caclulateCartCount(state.items);
+        },
         addToCart: (state, action: PayloadAction<Items>) => {
             const existingItem: Items = state.items.find(item => item._id === action.payload._id);
             if (existingItem) {
@@ -88,6 +95,7 @@ const cartSlice = createSlice({
         },
         updateQuantity: (state, action: PayloadAction<{ _id: string; quantity: number }>) => {
             const item = state.items.find(item => item._id === action.payload._id);
+            console.log(JSON.parse(JSON.stringify(state.items)), action.payload);
             if (item && action.payload.quantity > 0) {
                 item.quantity = action.payload.quantity;
                 item.total = item.price * item.quantity;
@@ -103,8 +111,8 @@ const cartSlice = createSlice({
             state.cartTotal = null;
             state.cartCount = null;
         },
-        rollbackCart: (state, action: PayloadAction<{ _id: string }>) => {
-            state.items = state.items.filter(item => item._id !== action.payload._id);
+        rollbackCart: (state, action: PayloadAction<Items[]>) => {
+            state.items = action.payload;
             state.cartTotal = calculateCartTotal(state.items);
             state.cartCount = caclulateCartCount(state.items);
         }
@@ -117,19 +125,28 @@ const cartSlice = createSlice({
             state.cartCount = caclulateCartCount(state.items);
         })
         builder.addCase(addToCartServer.fulfilled, (state, action) => {
-
-        })
+            // state.items = action.payload;
+            // state.cartTotal = calculateCartTotal(state.items);
+            // state.cartCount = caclulateCartCount(state.items);
+        }).addCase(addToCartServer.rejected, (state, action) => {
+            console.error("Add to cart failed", action.error);
+        });
         builder.addCase(updateCartServer.fulfilled, (state, action) => {
-            state.items = action.payload;
-            state.cartTotal = calculateCartTotal(state.items);
-            state.cartCount = caclulateCartCount(state.items);
-        })
+            // state.items = action.payload;
+            // state.cartTotal = calculateCartTotal(state.items);
+            // state.cartCount = caclulateCartCount(state.items);
+        }).addCase(updateCartServer.rejected, (state, action) => {
+            console.error("update cart failed", action.error);
+        });
         builder.addCase(removeCartServer.fulfilled, (state, action) => {
-            state.items = action.payload;
-            state.cartTotal = calculateCartTotal(state.items);
-            state.cartCount = caclulateCartCount(state.items);
-        })
+            // state.items = action.payload;
+            // state.cartTotal = calculateCartTotal(state.items);
+            // state.cartCount = caclulateCartCount(state.items);
+        }).addCase(removeCartServer.rejected, (state, action) => {
+            console.error("remove cart failed", action.error);
+        });
+
     }
 });
-export const { addToCart, removeCart, updateQuantity, clearCart, rollbackCart } = cartSlice.actions;
+export const { syncCart, addToCart, removeCart, updateQuantity, clearCart, rollbackCart } = cartSlice.actions;
 export default cartSlice.reducer;

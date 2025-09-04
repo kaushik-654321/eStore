@@ -9,12 +9,14 @@ import couponRoutes from "./routes/couponRoutes.js";
 import cookieParser from 'cookie-parser';
 import passport from "passport";
 import session from 'express-session';
+import dotenv from "dotenv";
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 // Middleware
 const allowedOrigins = [
-  "https://kaushik-654321.github.io", // Your frontend URL
+  "https://opulent-barnacle-qx7jjxjg7wvh9vp5-3000.app.github.dev", // Your frontend URL
 ]
 app.use(
   cors({
