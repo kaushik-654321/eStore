@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 // Middleware
 const allowedOrigins = [
-  "https://opulent-barnacle-qx7jjxjg7wvh9vp5-3000.app.github.dev", // Your frontend URL
+  "https://kaushik-654321.github.io/eStore", // Your frontend URL
 ]
 app.use(
   cors({
