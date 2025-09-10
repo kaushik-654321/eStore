@@ -13,6 +13,7 @@ import { withModal } from '../components/HOC/withModal';
 import { useCouponStore } from '../app/useCouponStore';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { debounceCartUpdate } from '../utils/utility';
 
 
 const CouponModal = withModal(ModalPage);
@@ -78,13 +79,16 @@ function CartPage() {
         const prevCart = store.getState().cart.items; // Get current cart state for rollback
         if (isAuthenticated) {
             dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
-            dispatch(addToCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] })).unwrap()
-                .catch(() => {
-                    // Step 3: Rollback if server fails
-                    dispatch(rollbackCart(prevCart));
-                    toast.error("Failed to add cart.");
-                });
 
+            debounceCartUpdate(() => {
+                const latestCart = store.getState().cart.items;
+                dispatch(addToCartServer({ userId, cartItems: latestCart })).unwrap()
+                    .catch(() => {
+                        // Step 3: Rollback if server fails
+                        dispatch(rollbackCart(prevCart));
+                        toast.error("Failed to add cart.");
+                    });
+            })
         }
         else {
             dispatch(addToCart({ _id: Itemdata._id, name: Itemdata.name, price: Itemdata.price, image: Itemdata.image }))
@@ -96,16 +100,18 @@ function CartPage() {
     const itemupdatecart = (Itemdata: Items) => {
         const prevCart = store.getState().cart.items;
         if (isAuthenticated) {
-            console.log(Itemdata);
-            dispatch(updateQuantity({ _id: Itemdata._id, quantity: Itemdata.quantity - 1 }))
-            dispatch(updateCartServer({ userId, cartItems: [{ _id: Itemdata._id, quantity: 1 }] })).unwrap().catch(() => {
-                // Step 3: Rollback if server fails
-                dispatch(rollbackCart(prevCart));
-                toast.error("Failed to update cart. Restored previous quantity.");
-            });
+            dispatch(updateQuantity({ _id: Itemdata._id, price: Itemdata.price, quantity: Itemdata.quantity - 1 }))
+            debounceCartUpdate(() => {
+                const latestCart = store.getState().cart.items;
+                dispatch(updateCartServer({ userId, cartItems: latestCart })).unwrap().catch(() => {
+                    // Step 3: Rollback if server fails
+                    dispatch(rollbackCart(prevCart));
+                    toast.error("Failed to update cart. Restored previous quantity.");
+                });
+            })
         }
         else {
-            dispatch(updateQuantity({ _id: Itemdata._id, quantity: Itemdata.quantity - 1 }))
+            dispatch(updateQuantity({ _id: Itemdata._id, price: Itemdata.price, quantity: Itemdata.quantity - 1 }))
             updateActivity();
         }
     }

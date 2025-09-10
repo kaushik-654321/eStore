@@ -22,7 +22,7 @@ export const getCart = async (req, res) => {
   const { userId } = req.params;
   try {
     const cart = await Cart.findOne({ user: userId }).populate("items.product");
-   
+
     const NormalizeCartItem = CartItem(cart?.items);
     if (!cart) return res.status(200).json({ items: [] });
     res.status(200).json(NormalizeCartItem);
@@ -53,7 +53,7 @@ export const addToCart = async (req, res) => {
       const existingItem = cart.items.find(item => item.product.toString() === productId);
 
       if (existingItem) {
-        existingItem.quantity += quantity;
+        existingItem.quantity = quantity;
       } else {
         cart.items.push({ product: productId, quantity });
       }
@@ -71,23 +71,17 @@ export const addToCart = async (req, res) => {
 
 export const updateCartItem = async (req, res) => {
   const { cartItems, userId } = req.body;
-  const { _id: productId, quantity } = cartItems[0];
+  // const { _id: productId, quantity } = cartItems[0];
 
   try {
     const cart = await Cart.findOne({ user: userId });
-
-
     if (!cart) return res.status(404).json({ message: "Cart not found" });
+    cart.items = [];
+    for (const { _id: productId, quantity } of cartItems) {
+      const product = await Fruit.findById(productId);
+      if (!product) continue; // skip invalid products
+      cart.items.push({ product: productId, quantity });
 
-    const item = cart.items.find(item => item.product.toString() === productId);
-
-    if (!item) return res.status(404).json({ message: "Item not found in cart" });
-    // Decrease quantity
-    item.quantity -= quantity;
-
-    // Remove item if quantity is 0 or less
-    if (item.quantity <= 0) {
-      cart.items.pull(item._id)
     }
 
     // If no items left, delete the cart
@@ -95,8 +89,6 @@ export const updateCartItem = async (req, res) => {
       await cart.deleteOne({ _id: cart._id });
       return res.status(200).json({ message: "Cart is now empty and has been deleted" })
     }
-
-
     await cart.save();
 
     const populatedCart = await cart.populate("items.product");

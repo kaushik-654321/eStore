@@ -37,7 +37,7 @@ export const updateCartServer = createAsyncThunk<Items[], Partial<addToCartPaylo
     'cart/updateCartServer',
     async ({ userId, cartItems }) => {
 
-        const response = await axiosInstance.put(`${API_ENDPOINTS.CART.api}/${userId}/${cartItems[0]._id}`,
+        const response = await axiosInstance.put(`${API_ENDPOINTS.CART.api}/${userId}`,
             { userId, cartItems },
         );
         if (!response.data || !response.data.items) {
@@ -76,14 +76,17 @@ const cartSlice = createSlice({
         },
         addToCart: (state, action: PayloadAction<Items>) => {
             const existingItem: Items = state.items.find(item => item._id === action.payload._id);
+            let prevTotal = state.cartTotal || 0;
             if (existingItem) {
                 existingItem.quantity += 1;
                 existingItem.total = existingItem.price * existingItem.quantity;
+                prevTotal += existingItem.price;
             }
             else {
                 state.items.push({ ...action.payload, quantity: 1, total: action.payload.price })
+                prevTotal += action.payload.price;
             }
-            state.cartTotal = calculateCartTotal(state.items);
+            state.cartTotal = prevTotal;
             state.cartCount = caclulateCartCount(state.items);
 
 
@@ -93,17 +96,20 @@ const cartSlice = createSlice({
             state.cartTotal = calculateCartTotal(state.items);
             state.cartCount = caclulateCartCount(state.items);
         },
-        updateQuantity: (state, action: PayloadAction<{ _id: string; quantity: number }>) => {
+        updateQuantity: (state, action: PayloadAction<{ _id: string; quantity: number; price: number }>) => {
             const item = state.items.find(item => item._id === action.payload._id);
-            console.log(JSON.parse(JSON.stringify(state.items)), action.payload);
+            let prevTotal = state.cartTotal || 0;
             if (item && action.payload.quantity > 0) {
                 item.quantity = action.payload.quantity;
                 item.total = item.price * item.quantity;
+                prevTotal -= item.price;
+
             }
             if (item && action.payload.quantity < 1) {
                 state.items = state.items.filter(item => item._id !== action.payload._id);
+                prevTotal -= action.payload.price;
             }
-            state.cartTotal = calculateCartTotal(state.items);
+            state.cartTotal = prevTotal;
             state.cartCount = caclulateCartCount(state.items);
         },
         clearCart: (state) => {

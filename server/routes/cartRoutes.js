@@ -9,7 +9,7 @@ const cartRoutes = express.Router();
 
 cartRoutes.get("/:userId", protect, getCart);
 cartRoutes.post("/:userId", protect, addToCart);
-cartRoutes.put("/:userId/:productId", protect, updateCartItem);
+cartRoutes.put("/:userId", protect, updateCartItem);
 cartRoutes.delete("/:userId/:productId", protect, removeCartItem);
 
 export default cartRoutes;

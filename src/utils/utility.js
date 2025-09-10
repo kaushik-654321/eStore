@@ -4,5 +4,14 @@ export const calculateCartTotal = (CartData) =>
 export const caclulateCartCount = (cartData) =>
     cartData.reduce((total, item) => total + item.quantity, 0);
 
+let timer;
+
+export const debounceCartUpdate = (callback, delay = 1000) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+        callback();
+    }, delay);
+}
+
 
 
